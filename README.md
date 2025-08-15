@@ -142,8 +142,6 @@ autocannon -c 100 -d 10 http://localhost:3000/user
 ### Available Endpoints
 
 - `GET /user` - Returns user data (with caching)
-- `GET /health` - Health check endpoint
-- `GET /worker` - Worker process information (cluster mode only)
 
 ### Testing Cache Behavior
 
