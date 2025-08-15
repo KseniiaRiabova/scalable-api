@@ -173,21 +173,87 @@ For accurate cache testing, use Postman or curl to see the true server-side cach
 - **Load Balancing**: Round-robin (Node.js default)
 - **Restart Policy**: Automatic worker restart on failure
 
-## 📈 Performance Improvements
+## 📈 Performance Benchmarks
 
-### Before Optimization (Phase 1: Basic Express)
+### Baseline Performance (Phase 1: Basic Express - `index1.ts`)
 
-- Single-threaded execution
-- No caching (1-second response time due to simulated DB delay)
-- No rate limiting
-- Limited concurrent request handling
+Testing with `autocannon http://localhost:3000/user` (10 connections, 10 seconds):
 
-### After Optimization (Phase 3: Clustered + Redis)
+```
+┌─────────┬──────┬──────┬───────┬──────┬─────────┬─────────┬───────┐
+│ Stat    │ 2.5% │ 50%  │ 97.5% │ 99%  │ Avg     │ Stdev   │ Max   │
+├─────────┼──────┼──────┼───────┼──────┼─────────┼─────────┼───────┤
+│ Latency │ 1006 │ 1014 │ 1033  │ 1034 │ 1016.63 │ 7.82 ms │ 1034  │
+│         │ ms   │ ms   │ ms    │ ms   │ ms      │         │ ms    │
+└─────────┴──────┴──────┴───────┴──────┴─────────┴─────────┴───────┘
+┌───────────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┐
+│ Stat      │ 1%  │ 2.5%│ 50% │97.5%│ Avg │Stdev│ Min │
+├───────────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+│ Req/Sec   │ 0   │ 0   │ 10  │ 10  │ 9   │ 3   │ 10  │
+├───────────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+│ Bytes/Sec │ 0 B │ 0 B │2.59 │2.59 │2.33 │777 B│2.59 │
+│           │     │     │ kB  │ kB  │ kB  │     │ kB  │
+└───────────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┘
 
-- Multi-threaded execution (8 workers on 8-core system)
-- Redis caching (sub-millisecond cached responses)
-- Redis-based distributed rate limiting
-- ~3,700 requests/second throughput
+100 requests in 10.12s, 23.3 kB read
+```
+
+**Key Metrics:**
+
+- **Average Latency**: 1,016ms (due to 1-second simulated DB delay)
+- **Throughput**: ~10 requests/second
+- **Total Requests**: 100 requests in 10.12s
+
+### Optimized Performance (Phase 3: Cluster + Redis - No Rate Limiting)
+
+Testing with `autocannon http://localhost:3000/user` (10 connections, 10 seconds):
+
+```
+┌─────────┬──────┬──────┬───────┬──────┬─────────┬─────────┬───────┐
+│ Stat    │ 2.5% │ 50%  │ 97.5% │ 99%  │ Avg     │ Stdev   │ Max   │
+├─────────┼──────┼──────┼───────┼──────┼─────────┼─────────┼───────┤
+│ Latency │ 0 ms │ 1 ms │ 2 ms  │ 3 ms │ 0.84 ms │ 1.63 ms │ 80 ms │
+└─────────┴──────┴──────┴───────┴──────┴─────────┴─────────┴───────┘
+┌───────────┬─────────┬─────────┬─────────┬─────────┬─────────┬──────────┬─────────┐
+│ Stat      │ 1%      │ 2.5%    │ 50%     │ 97.5%   │ Avg     │ Stdev    │ Min     │
+├───────────┼─────────┼─────────┼─────────┼─────────┼─────────┼──────────┼─────────┤
+│ Req/Sec   │ 4,615   │ 4,615   │ 7,847   │ 8,431   │ 7,459   │ 1,193.92 │ 4,612   │
+├───────────┼─────────┼─────────┼─────────┼─────────┼─────────┼──────────┼─────────┤
+│ Bytes/Sec │ 1.77 MB │ 1.77 MB │ 3.01 MB │ 3.23 MB │ 2.86 MB │ 458 kB   │ 1.77 MB │
+└───────────┴─────────┴─────────┴─────────┴─────────┴─────────┴──────────┴─────────┘
+
+74,581 requests in 10.1s, 28.6 MB read
+```
+
+**Key Metrics:**
+
+- **Average Latency**: 0.84ms (1,210x improvement!)
+- **Throughput**: ~7,459 requests/second (746x improvement!)
+- **Total Requests**: 74,581 requests in 10.1s
+
+### Performance Comparison Summary
+
+| Metric                   | Basic Express | Clustered + Redis | Improvement            |
+| ------------------------ | ------------- | ----------------- | ---------------------- |
+| **Average Latency**      | 1,016.63ms    | 0.84ms            | **1,210x faster**      |
+| **Throughput (req/s)**   | ~10           | ~7,459            | **746x increase**      |
+| **Total Requests (10s)** | 100           | 74,581            | **746x increase**      |
+| **CPU Utilization**      | Single core   | All cores         | **Multi-core scaling** |
+| **Caching**              | None          | Redis (60s TTL)   | **Sub-ms responses**   |
+
+### Key Optimizations Demonstrated
+
+1. **Redis Caching**: Eliminates the 1-second database simulation delay after first request
+2. **Cluster Architecture**: Utilizes all CPU cores for parallel request processing
+3. **Load Distribution**: Automatic load balancing across worker processes
+4. **Memory Efficiency**: Shared Redis cache across all worker processes
+
+### Performance Testing Notes
+
+- **Rate Limiting Impact**: When rate limiting is enabled (100 req/min), throughput is intentionally capped
+- **Cache Warming**: First request still experiences the 1-second delay, subsequent requests are served from cache
+- **Cluster Benefits**: Multiple workers can handle concurrent requests efficiently
+- **Real-world Scaling**: This demonstrates foundational patterns for horizontal scaling
 
 ## Key Learning Points
 
