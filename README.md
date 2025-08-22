@@ -1,330 +1,202 @@
-# Scalable API - Node.js Performance Optimization Showcase
+# Scalable API Performance Comparison
 
-> **Note:** This project was created for a LinkedIn Article. [Article link will be added here]
+A Node.js project demonstrating three different API implementations with varying levels of optimization, featuring an interactive dashboard for performance comparison.
 
-## 📖 Overview
+## Project Overview
 
-This project demonstrates the evolution of a simple Express.js API into a highly scalable, monitored application. It showcases various optimization techniques, real-time monitoring, and architectural patterns used to improve API performance, throughput, and resource utilization.
+This project showcases API scalability techniques through three distinct implementations:
 
-## 🚀 Features
+- **Basic API** - Simple Express server with simulated database delays
+- **Optimized API** - Redis caching implementation for improved performance
+- **Scaled API** - Multi-process cluster architecture with Redis caching
 
-### 🔥 Core Performance Features
+Each implementation can be tested and compared using the included interactive dashboard.
 
-- **Redis Caching** - Lightning-fast data retrieval with configurable TTL
-- **Rate Limiting** - Configurable IP-based rate limiting with Redis store
-- **Cluster Support** - Multi-process architecture leveraging all CPU cores
-- **Smart DB Simulation** - Variable latency database simulation for realistic testing
+## Architecture
 
-### 📊 Advanced Monitoring & Analytics
+### Basic API (Port 3002)
 
-- **Real-time Dashboard** - Beautiful web dashboard with live metrics and charts
-- **Comprehensive Metrics** - Request rates, cache performance, response times
-- **CSV Data Export** - Automated logging for Excel analysis and reporting
-- **Performance Insights** - Cache hit rates, database timing, rate limit violations
+- Simple Express.js server
+- Simulated database operations with 50-100ms delays
+- No caching or optimization
+- Single process architecture
 
-### ⚙️ Configuration & Flexibility
+### Optimized API (Port 3000)
 
-- **Environment Variables** - Full configuration via environment variables
-- **Multiple Profiles** - Pre-configured setups for different scenarios
-- **Command Line Control** - Easy switching between configurations
-- **Health Checks** - Built-in health monitoring endpoints
+- Express.js with Redis caching
+- 60-second cache TTL
+- Fallback to simulated database on cache miss
+- Single process with caching optimization
 
-## Project Evolution
+### Scaled API (Port 3001)
 
-### Phase 1: Basic Express API (`test/index1.ts`)
+- Node.js cluster implementation with 8 worker processes
+- Redis caching across all workers
+- Load distribution across multiple CPU cores
+- Automatic worker restart on failure
 
-- Simple TypeScript Express.js application
-- Single endpoint with 1-second simulated database delay
-- Basic error handling and response structure
-- Baseline for performance comparisons
+## Features
 
-### Phase 2: Redis Integration (`src/index.ts`)
+### Performance Testing
 
-- **Caching Layer**: Redis integration with configurable TTL
-- **Rate Limiting**: Redis-based rate limiting with smart error messages
-- **Optimized DB Simulation**: Variable latency (50-200ms) for realistic testing
-- **Performance Headers**: Cache hit/miss indicators
+- Individual API testing with configurable request counts
+- High load testing (100 concurrent requests)
+- CPU-intensive workload testing
+- Comparative performance analysis
 
-### Phase 3: Advanced Monitoring & Configuration
+### Interactive Dashboard
 
-- **Real-time Metrics**: Live dashboard with Chart.js visualizations
-- **Configurable Everything**: Environment-based configuration system
-- **CSV Analytics**: Automated data export for analysis
-- **Professional Monitoring**: Request tracking, cache analytics, performance metrics
+- Real-time performance metrics visualization
+- Response time comparison charts
+- Throughput and latency measurements
+- Cache hit rate monitoring
+- Worker process tracking
 
-### Phase 4: Cluster Implementation (`src/cluster.ts`)
+### Endpoints
 
-- **Multi-Process Architecture**: Full CPU utilization
-- **Shared Redis State**: Consistent rate limiting across processes
-- **High Availability**: Auto-restart failed workers
-- **Horizontal Scaling**: Ready for distributed deployment
+- `GET /user` - Returns user data with optional caching
+- `GET /cpu-intensive` - CPU-heavy operations for testing cluster benefits
+- `GET /health` - Health check endpoint (Redis and Cluster APIs)
 
-## 🛠️ Technologies Used
-
-### Core Technologies
-
-- **Node.js** - Runtime environment
-- **TypeScript** - Type-safe JavaScript development
-- **Express.js** - Web application framework
-
-### Performance & Scalability
-
-- **Redis** - In-memory caching and rate limiting store
-- **Node.js Cluster** - Multi-process architecture
-- **Express Rate Limit** - Advanced rate limiting middleware
-
-### Monitoring & Analytics
-
-- **Chart.js** - Real-time data visualizations
-- **CSV Export** - Data analysis and reporting
-- **Real-time Metrics** - Live performance monitoring
-
-### Development Tools
-
-- **ts-node** - TypeScript execution for development
-- **nodemon** - Auto-restart during development
-- **ESLint** - Code linting and formatting
-- **Autocannon** - HTTP benchmarking tool for performance testing
-
-## 📁 Project Structure
-
-```
-scalable-api/
-├── index1.ts             # Phase 1: Basic Express API (no Redis)
-├── src/
-│   ├── index.ts          # Phase 2: Redis integration (caching + rate limiting)
-│   └── cluster.ts        # Phase 3: Cluster implementation with Redis
-├── dist/                 # Compiled JavaScript output
-├── package.json          # Dependencies and scripts
-├── tsconfig.json         # TypeScript configuration
-├── .eslintrc.js         # ESLint configuration
-└── README.md            # Project documentation
-```
-
-## 🏃‍♂️ Getting Started
+## Quick Start
 
 ### Prerequisites
 
-- Node.js (v14 or higher)
-- Redis server (local installation or Docker)
-- npm or yarn package manager
+- Node.js (v14+)
+- Redis server
+- npm
 
 ### Installation
 
-1. **Clone the repository**
+```bash
+git clone https://github.com/KseniiaRiabova/scalable-api.git
+cd scalable-api
+npm install
+```
 
-   ```bash
-   git clone https://github.com/KseniiaRiabova/scalable-api.git
-   cd scalable-api
-   ```
-
-2. **Install dependencies**
-
-   ```bash
-   npm install
-   ```
-
-3. **Start Redis server**
-
-   ```bash
-   # Local Redis installation
-   redis-server
-
-   # Or using Docker
-   docker run -d -p 6379:6379 redis
-   ```
-
-### Running the Application
-
-#### Development Mode
+### Start Redis
 
 ```bash
-# Single-process application
-npm run dev
+# Local installation
+redis-server
 
-# Multi-process cluster application
-npm run dev:cluster
+# Docker
+docker run -d -p 6379:6379 redis
 ```
 
-#### Production Mode
+### Run All APIs
 
 ```bash
-# Build the application
-npm run build
-
-# Run single-process version
-npm start
-
-# Run cluster version
-npm run start:cluster
+npm run start-all
 ```
 
-## 📊 Performance Testing
+This starts all three APIs simultaneously:
 
-### Using Autocannon
+- Basic API: http://localhost:3002
+- Optimized API: http://localhost:3000
+- Scaled API: http://localhost:3001
+
+### Access Dashboard
+
+Open `public/comparison-dashboard.html` in your browser to access the interactive performance comparison dashboard.
+
+## Development Scripts
+
+### Individual APIs
 
 ```bash
-# Basic load test
-autocannon http://localhost:3000/user
-
-# Custom test with 10 connections for 30 seconds
-autocannon -c 10 -d 30 http://localhost:3000/user
-
-# High-load test
-autocannon -c 100 -d 10 http://localhost:3000/user
+npm run dev:basic    # Basic API only
+npm run dev:redis    # Optimized API only
+npm run dev:cluster  # Scaled API only
 ```
 
-### Available Endpoints
+### Production
 
-- `GET /user` - Returns user data (with caching)
-
-### Testing Cache Behavior
-
-**Important Note**: When testing caching behavior, the tool you use matters:
-
-- **Browser Testing**: May show `304 Not Modified` responses due to browser-level HTTP caching, even when Redis cache is working
-- **Postman/API Tools**: Shows actual server response (`200 OK`) when data comes from Redis cache
-- **Autocannon**: Best for load testing as it bypasses browser caching quirks
-
-For accurate cache testing, use Postman or curl to see the true server-side caching behavior.
-
-## 🔧 Configuration
-
-### Rate Limiting
-
-- **Window**: 60 seconds
-- **Limit**: 100 requests per IP per window
-- **Store**: Redis (shared across all workers)
-
-### Caching
-
-- **TTL**: 60 seconds
-- **Store**: Redis
-- **Strategy**: Cache-aside pattern
-
-### Cluster Configuration
-
-- **Workers**: Automatically scales to number of CPU cores
-- **Load Balancing**: Round-robin (Node.js default)
-- **Restart Policy**: Automatic worker restart on failure
-
-## 📈 Performance Benchmarks
-
-### Baseline Performance (Phase 1: Basic Express - `index1.ts`)
-
-Testing with `autocannon http://localhost:3000/user` (10 connections, 10 seconds):
-
-```
-┌─────────┬──────┬──────┬───────┬──────┬─────────┬─────────┬───────┐
-│ Stat    │ 2.5% │ 50%  │ 97.5% │ 99%  │ Avg     │ Stdev   │ Max   │
-├─────────┼──────┼──────┼───────┼──────┼─────────┼─────────┼───────┤
-│ Latency │ 1006 │ 1014 │ 1033  │ 1034 │ 1016.63 │ 7.82 ms │ 1034  │
-│         │ ms   │ ms   │ ms    │ ms   │ ms      │         │ ms    │
-└─────────┴──────┴──────┴───────┴──────┴─────────┴─────────┴───────┘
-┌───────────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┐
-│ Stat      │ 1%  │ 2.5%│ 50% │97.5%│ Avg │Stdev│ Min │
-├───────────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
-│ Req/Sec   │ 0   │ 0   │ 10  │ 10  │ 9   │ 3   │ 10  │
-├───────────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤
-│ Bytes/Sec │ 0 B │ 0 B │2.59 │2.59 │2.33 │777 B│2.59 │
-│           │     │     │ kB  │ kB  │ kB  │     │ kB  │
-└───────────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┘
-
-100 requests in 10.12s, 23.3 kB read
+```bash
+npm run build           # Compile TypeScript
+npm run start:basic     # Run compiled Basic API
+npm run start:redis     # Run compiled Optimized API
+npm run start:cluster   # Run compiled Scaled API
 ```
 
-**Key Metrics:**
-
-- **Average Latency**: 1,016ms (due to 1-second simulated DB delay)
-- **Throughput**: ~10 requests/second
-- **Total Requests**: 100 requests in 10.12s
-
-### Optimized Performance (Phase 3: Cluster + Redis - No Rate Limiting)
-
-Testing with `autocannon http://localhost:3000/user` (10 connections, 10 seconds):
+## Project Structure
 
 ```
-┌─────────┬──────┬──────┬───────┬──────┬─────────┬─────────┬───────┐
-│ Stat    │ 2.5% │ 50%  │ 97.5% │ 99%  │ Avg     │ Stdev   │ Max   │
-├─────────┼──────┼──────┼───────┼──────┼─────────┼─────────┼───────┤
-│ Latency │ 0 ms │ 1 ms │ 2 ms  │ 3 ms │ 0.84 ms │ 1.63 ms │ 80 ms │
-└─────────┴──────┴──────┴───────┴──────┴─────────┴─────────┴───────┘
-┌───────────┬─────────┬─────────┬─────────┬─────────┬─────────┬──────────┬─────────┐
-│ Stat      │ 1%      │ 2.5%    │ 50%     │ 97.5%   │ Avg     │ Stdev    │ Min     │
-├───────────┼─────────┼─────────┼─────────┼─────────┼─────────┼──────────┼─────────┤
-│ Req/Sec   │ 4,615   │ 4,615   │ 7,847   │ 8,431   │ 7,459   │ 1,193.92 │ 4,612   │
-├───────────┼─────────┼─────────┼─────────┼─────────┼─────────┼──────────┼─────────┤
-│ Bytes/Sec │ 1.77 MB │ 1.77 MB │ 3.01 MB │ 3.23 MB │ 2.86 MB │ 458 kB   │ 1.77 MB │
-└───────────┴─────────┴─────────┴─────────┴─────────┴─────────┴──────────┴─────────┘
-
-74,581 requests in 10.1s, 28.6 MB read
+scalable-api/
+├── src/
+│   ├── basic-api.ts      # Basic implementation
+│   ├── redis-api.ts      # Redis-optimized implementation
+│   └── cluster-api.ts    # Cluster implementation
+├── public/
+│   ├── comparison-dashboard.html  # Interactive dashboard
+│   └── comparison-dashboard.css   # Dashboard styling
+├── dist/                 # Compiled JavaScript
+├── package.json          # Dependencies and scripts
+├── tsconfig.json         # TypeScript configuration
+└── nodemon.json          # Development configuration
 ```
 
-**Key Metrics:**
+## Performance Testing
 
-- **Average Latency**: 0.84ms (1,210x improvement!)
-- **Throughput**: ~7,459 requests/second (746x improvement!)
-- **Total Requests**: 74,581 requests in 10.1s
+### Dashboard Testing
 
-### Performance Comparison Summary
+Use the interactive dashboard to:
 
-| Metric                   | Basic Express | Clustered + Redis | Improvement            |
-| ------------------------ | ------------- | ----------------- | ---------------------- |
-| **Average Latency**      | 1,016.63ms    | 0.84ms            | **1,210x faster**      |
-| **Throughput (req/s)**   | ~10           | ~7,459            | **746x increase**      |
-| **Total Requests (10s)** | 100           | 74,581            | **746x increase**      |
-| **CPU Utilization**      | Single core   | All cores         | **Multi-core scaling** |
-| **Caching**              | None          | Redis (60s TTL)   | **Sub-ms responses**   |
+- Test individual APIs with 10 or 100 requests
+- Run CPU-intensive tests to demonstrate cluster benefits
+- Compare response times across all implementations
+- Monitor cache hit rates and worker distribution
 
-### Key Optimizations Demonstrated
+### Command Line Testing
 
-1. **Redis Caching**: Eliminates the 1-second database simulation delay after first request
-2. **Cluster Architecture**: Utilizes all CPU cores for parallel request processing
-3. **Load Distribution**: Automatic load balancing across worker processes
-4. **Memory Efficiency**: Shared Redis cache across all worker processes
+```bash
+# Basic performance test
+curl http://localhost:3002/user
 
-### Performance Testing Notes
+# Load test with autocannon
+npx autocannon http://localhost:3001/user -c 10 -d 10
+```
 
-- **Rate Limiting Impact**: When rate limiting is enabled (100 req/min), throughput is intentionally capped
-- **Cache Warming**: First request still experiences the 1-second delay, subsequent requests are served from cache
-- **Cluster Benefits**: Multiple workers can handle concurrent requests efficiently
-- **Real-world Scaling**: This demonstrates foundational patterns for horizontal scaling
+## Configuration
+
+### Redis Settings
+
+- **Cache TTL**: 60 seconds
+- **Default Port**: 6379
+- **Connection**: Automatic reconnection enabled
+
+### Cluster Settings
+
+- **Workers**: 8 processes
+- **Load Balancing**: Round-robin
+- **Auto-restart**: Enabled for failed workers
 
 ## Key Learning Points
 
-1. **Caching Strategy**: Redis dramatically improves response times for frequently accessed data
-2. **Rate Limiting**: Protects API from abuse while maintaining good user experience
-3. **Clustering**: Maximizes hardware utilization without changing application logic
-4. **Monitoring**: Health checks and worker information for operational visibility
-5. **TypeScript**: Provides type safety and better developer experience
+### Caching Benefits
 
-## Scalability Patterns Demonstrated
+The Optimized API demonstrates how Redis caching can dramatically reduce response times for frequently accessed data.
 
-- **Vertical Scaling**: Cluster module utilizes all available CPU cores
-- **Caching Layer**: Reduces database load and improves response times
-- **Rate Limiting**: Prevents system overload and ensures fair usage
-- **Graceful Shutdown**: Proper cleanup of resources on process termination
-- **Health Monitoring**: Endpoints for system health verification
+### Cluster Advantages
 
-## Production Considerations
+The Scaled API shows how multi-process architecture can improve throughput, especially for CPU-intensive operations.
 
-This project demonstrates foundational scalability patterns. For production deployment, consider:
+### Performance Trade-offs
 
-- **Horizontal Scaling**: Multiple server instances behind a load balancer
-- **Database Optimization**: Connection pooling, query optimization, read replicas
-- **Monitoring & Logging**: Application performance monitoring (APM) tools
-- **Security**: HTTPS, authentication, input validation, security headers
-- **Error Handling**: Comprehensive error tracking and alerting
-- **Environment Configuration**: Separate configs for different environments
+Compare different approaches to understand when each optimization technique provides the most benefit.
 
-## 🤝 Contributing
+## Technologies Used
 
-This project serves as an educational showcase. Feel free to fork and experiment with different optimization techniques!
+- **Node.js & TypeScript** - Runtime and type safety
+- **Express.js** - Web framework
+- **Redis** - Caching and session storage
+- **Node.js Cluster** - Multi-process architecture
+- **Chart.js** - Dashboard visualizations
 
-## 📝 License
+## License
 
-ISC License - see LICENSE file for details
+ISC
 
 ---
 
-**Created for educational purposes to demonstrate API optimization techniques and scalability patterns in Node.js applications.**
+Educational project demonstrating API optimization techniques and scalability patterns.
