@@ -4,31 +4,60 @@
 
 ## 📖 Overview
 
-This project demonstrates the evolution of a simple Express.js API into a more scalable, optimized application. It showcases various optimization techniques and architectural patterns used to improve API performance, throughput, and resource utilization.
+This project demonstrates the evolution of a simple Express.js API into a highly scalable, monitored application. It showcases various optimization techniques, real-time monitoring, and architectural patterns used to improve API performance, throughput, and resource utilization.
+
+## 🚀 Features
+
+### 🔥 Core Performance Features
+
+- **Redis Caching** - Lightning-fast data retrieval with configurable TTL
+- **Rate Limiting** - Configurable IP-based rate limiting with Redis store
+- **Cluster Support** - Multi-process architecture leveraging all CPU cores
+- **Smart DB Simulation** - Variable latency database simulation for realistic testing
+
+### 📊 Advanced Monitoring & Analytics
+
+- **Real-time Dashboard** - Beautiful web dashboard with live metrics and charts
+- **Comprehensive Metrics** - Request rates, cache performance, response times
+- **CSV Data Export** - Automated logging for Excel analysis and reporting
+- **Performance Insights** - Cache hit rates, database timing, rate limit violations
+
+### ⚙️ Configuration & Flexibility
+
+- **Environment Variables** - Full configuration via environment variables
+- **Multiple Profiles** - Pre-configured setups for different scenarios
+- **Command Line Control** - Easy switching between configurations
+- **Health Checks** - Built-in health monitoring endpoints
 
 ## Project Evolution
 
-### Phase 1: Basic Express API (`index1.ts`)
+### Phase 1: Basic Express API (`test/index1.ts`)
 
-- Started with a simple TypeScript Express.js application
-- Single endpoint (`/user`) with simulated database connection
+- Simple TypeScript Express.js application
+- Single endpoint with 1-second simulated database delay
 - Basic error handling and response structure
-- Demonstrated fundamental API development patterns
+- Baseline for performance comparisons
 
 ### Phase 2: Redis Integration (`src/index.ts`)
 
-- **Caching Layer**: Added Redis for data caching with 60-second TTL
-- **Rate Limiting**: Implemented Redis-based rate limiting (5 requests/minute per IP)
-- **Performance Boost**: Significantly reduced response times for cached data
-- **Shared State**: Prepared foundation for distributed architecture
+- **Caching Layer**: Redis integration with configurable TTL
+- **Rate Limiting**: Redis-based rate limiting with smart error messages
+- **Optimized DB Simulation**: Variable latency (50-200ms) for realistic testing
+- **Performance Headers**: Cache hit/miss indicators
 
-### Phase 3: Cluster Implementation (`src/cluster.ts`)
+### Phase 3: Advanced Monitoring & Configuration
 
-- **Multi-Process Architecture**: Utilized Node.js cluster module to leverage all CPU cores
-- **Rate Limiting**: Increased to 100 requests/minute per IP for cluster testing
-- **Load Distribution**: Automatic load balancing across worker processes
-- **High Availability**: Worker process restart on failure
-- **Scalability**: Horizontal scaling within a single machine
+- **Real-time Metrics**: Live dashboard with Chart.js visualizations
+- **Configurable Everything**: Environment-based configuration system
+- **CSV Analytics**: Automated data export for analysis
+- **Professional Monitoring**: Request tracking, cache analytics, performance metrics
+
+### Phase 4: Cluster Implementation (`src/cluster.ts`)
+
+- **Multi-Process Architecture**: Full CPU utilization
+- **Shared Redis State**: Consistent rate limiting across processes
+- **High Availability**: Auto-restart failed workers
+- **Horizontal Scaling**: Ready for distributed deployment
 
 ## 🛠️ Technologies Used
 
@@ -40,9 +69,15 @@ This project demonstrates the evolution of a simple Express.js API into a more s
 
 ### Performance & Scalability
 
-- **Redis** - In-memory data structure store for caching and rate limiting
-- **Node.js Cluster** - Multi-process architecture for CPU utilization
-- **Express Rate Limit** - API rate limiting middleware
+- **Redis** - In-memory caching and rate limiting store
+- **Node.js Cluster** - Multi-process architecture
+- **Express Rate Limit** - Advanced rate limiting middleware
+
+### Monitoring & Analytics
+
+- **Chart.js** - Real-time data visualizations
+- **CSV Export** - Data analysis and reporting
+- **Real-time Metrics** - Live performance monitoring
 
 ### Development Tools
 

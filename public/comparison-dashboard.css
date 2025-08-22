@@ -1,0 +1,349 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+h1 {
+  text-align: center;
+  color: white;
+  margin-bottom: 30px;
+  font-size: 2.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* API Cards Section */
+.api-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.api-card {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.api-card:hover {
+  transform: translateY(-5px);
+}
+
+.api-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 3px solid;
+}
+
+.basic-api .api-title {
+  border-bottom-color: #f44336;
+  color: #f44336;
+}
+
+.optimized-api .api-title {
+  border-bottom-color: #4caf50;
+  color: #4caf50;
+}
+
+.scaled-api .api-title {
+  border-bottom-color: #2196f3;
+  color: #2196f3;
+}
+
+.api-description {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+.api-metrics {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.metric-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 5px;
+  font-size: 0.85rem;
+}
+
+.metric-label {
+  font-weight: 500;
+  color: #555;
+}
+
+.metric-value {
+  font-weight: bold;
+  color: #333;
+}
+
+.test-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.load-test-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  width: 100%;
+  margin-bottom: 10px;
+  background: linear-gradient(45deg, #ff9800, #f57c00);
+}
+
+.cpu-test-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  width: 100%;
+  margin-bottom: 10px;
+  background: linear-gradient(45deg, #e91e63, #ad1457);
+  border: 2px solid #c2185b;
+}
+
+.test-button:hover,
+.load-test-button:hover,
+.cpu-test-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.basic-api .test-button,
+.optimized-api .test-button,
+.scaled-api .test-button {
+  background: linear-gradient(45deg, #4caf50, #45a049);
+}
+
+.basic-api .load-test-button,
+.optimized-api .load-test-button,
+.scaled-api .load-test-button {
+  background: linear-gradient(45deg, #ff9800, #f57c00);
+}
+
+/* Charts Section */
+.charts-section {
+  margin-bottom: 30px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.chart-card {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  height: 450px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-card canvas {
+  flex: 1;
+  max-height: 320px !important;
+  min-height: 250px !important;
+}
+
+.chart-header {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.chart-title {
+  text-align: center;
+  color: #333;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.chart-controls {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.chart-test-button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.8rem;
+  background: linear-gradient(45deg, #2196f3, #1976d2);
+}
+
+.chart-test-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(33, 150, 243, 0.3);
+}
+
+.cpu-load-button {
+  background: linear-gradient(45deg, #ff9800, #f57c00) !important;
+  color: white !important;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.cpu-load-button:hover {
+  background: linear-gradient(45deg, #f57c00, #e65100) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(255, 152, 0, 0.4) !important;
+}
+
+.clear-button {
+  padding: 6px 12px;
+  background: linear-gradient(45deg, #ff6b6b, #e74c3c);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.clear-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(231, 76, 60, 0.3);
+}
+
+/* Loading Indicator */
+.loading {
+  display: none;
+  text-align: center;
+  color: #667eea;
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+.loading.active {
+  display: block;
+}
+
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 10px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Status Indicators */
+.status-indicator {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.status-online {
+  background: #4caf50;
+}
+
+.status-offline {
+  background: #f44336;
+}
+
+.status-testing {
+  background: #ff9800;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .api-cards {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .charts-section {
+    grid-template-columns: 1fr;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+
+  .api-card {
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+}

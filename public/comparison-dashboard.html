@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API Performance Comparison Dashboard</title>
+    <link rel="stylesheet" href="comparison-dashboard.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>API Performance Comparison Dashboard</h1>
+
+      <!-- API Cards Section -->
+      <div class="api-cards">
+        <!-- Basic API Card -->
+        <div class="api-card basic-api">
+          <div class="api-title">
+            <span class="status-indicator" id="basic-status"></span>
+            📍 Basic API
+          </div>
+          <div class="api-description">
+            Baseline performance<br />
+            Simple database simulation<br />
+            No caching, single process
+          </div>
+          <div class="api-metrics">
+            <div class="metric-item">
+              <span class="metric-label">Avg Response:</span>
+              <span class="metric-value" id="basic-response">~1-5ms</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Total Time:</span>
+              <span class="metric-value" id="basic-total-time">0s</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Throughput:</span>
+              <span class="metric-value" id="basic-throughput">0 req/s</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Requests Count:</span>
+              <span class="metric-value" id="basic-requests">0</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Cache Hit Rate:</span>
+              <span class="metric-value">0%</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Workers:</span>
+              <span class="metric-value">1</span>
+            </div>
+          </div>
+          <button class="test-button" onclick="testBasicAPI()">
+            Send 10 Requests
+          </button>
+          <button class="load-test-button" onclick="loadTestBasicAPI()">
+            High Load Test (100 requests)
+          </button>
+          <button class="cpu-test-button" onclick="cpuTestBasicAPI()">
+            🔥 CPU Intensive Test
+          </button>
+        </div>
+
+        <!-- Optimized API Card -->
+        <div class="api-card optimized-api">
+          <div class="api-title">
+            <span class="status-indicator" id="optimized-status"></span>
+            ⚡ Optimized API
+          </div>
+          <div class="api-description">
+            Redis caching enabled<br />
+            Cache miss fallback to DB<br />
+            Single process optimization
+          </div>
+          <div class="api-metrics">
+            <div class="metric-item">
+              <span class="metric-label">Avg Response:</span>
+              <span class="metric-value" id="optimized-response">~1ms</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Total Time:</span>
+              <span class="metric-value" id="optimized-total-time">0s</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Throughput:</span>
+              <span class="metric-value" id="optimized-throughput"
+                >0 req/s</span
+              >
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Requests Count:</span>
+              <span class="metric-value" id="optimized-requests">0</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Cache Hit Rate:</span>
+              <span class="metric-value" id="optimized-cache-rate">95%+</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Workers:</span>
+              <span class="metric-value">1</span>
+            </div>
+          </div>
+          <button class="test-button" onclick="testOptimizedAPI()">
+            Send 10 Requests
+          </button>
+          <button class="load-test-button" onclick="loadTestOptimizedAPI()">
+            High Load Test (100 requests)
+          </button>
+          <button class="cpu-test-button" onclick="cpuTestOptimizedAPI()">
+            🔥 CPU Intensive Test
+          </button>
+        </div>
+
+        <!-- Scaled API Card -->
+        <div class="api-card scaled-api">
+          <div class="api-title">
+            <span class="status-indicator" id="scaled-status"></span>
+            🚀 Scaled API
+          </div>
+          <div class="api-description">
+            Multi-process cluster<br />
+            8 worker processes<br />
+            Shared Redis cache
+          </div>
+          <div class="api-metrics">
+            <div class="metric-item">
+              <span class="metric-label">Avg Response:</span>
+              <span class="metric-value" id="scaled-response">~1ms</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Total Time:</span>
+              <span class="metric-value" id="scaled-total-time">0s</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Throughput:</span>
+              <span class="metric-value" id="scaled-throughput">0 req/s</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Requests Count:</span>
+              <span class="metric-value" id="scaled-requests">0</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Cache Hit Rate:</span>
+              <span class="metric-value" id="scaled-cache-rate">95%+</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Workers:</span>
+              <span class="metric-value" id="scaled-workers">8</span>
+            </div>
+          </div>
+          <button class="test-button" onclick="testScaledAPI()">
+            Send 10 Requests
+          </button>
+          <button class="load-test-button" onclick="loadTestScaledAPI()">
+            High Load Test (100 requests)
+          </button>
+          <button class="cpu-test-button" onclick="cpuTestScaledAPI()">
+            🔥 CPU Intensive Test
+          </button>
+        </div>
+      </div>
+
+      <!-- Loading Indicator -->
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <span id="loadingText">Running test...</span>
+      </div>
+
+      <!-- Charts Section -->
+      <div class="charts-section">
+        <!-- Response Time Comparison Chart -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">
+              Response Time Comparison (10 & 100 requests)
+            </div>
+            <div class="chart-controls">
+              <button class="chart-test-button" onclick="runAllAPIs(10)">
+                Run All APIs (10 requests)
+              </button>
+              <button class="chart-test-button" onclick="runAllAPIs(100)">
+                Run All APIs (100 requests)
+              </button>
+              <button
+                class="chart-test-button cpu-load-button"
+                onclick="runCPUTest()"
+              >
+                🔥 Run All APIs High CPU Load
+              </button>
+              <button class="clear-button" onclick="clearData()">
+                Clear All Data
+              </button>
+            </div>
+          </div>
+          <canvas id="responseComparisonChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Chart configurations
+      const responseChart = new Chart(
+        document.getElementById('responseComparisonChart'),
+        {
+          type: 'bar',
+          data: {
+            labels: ['Basic API', 'Optimized API', 'Scaled API'],
+            datasets: [
+              {
+                label: 'Average Response Time (ms)',
+                data: [0, 0, 0], // Will be updated when tests run
+                backgroundColor: ['#f44336', '#4CAF50', '#2196F3'],
+                borderColor: ['#d32f2f', '#45a049', '#1976D2'],
+                borderWidth: 2,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                type: 'logarithmic',
+                beginAtZero: false,
+                min: 0.1,
+                title: {
+                  display: true,
+                  text: 'Response Time (ms) - Log Scale',
+                },
+                ticks: {
+                  callback: function (value) {
+                    if (value === 0.1) return '0.1';
+                    if (value === 1) return '1';
+                    if (value === 10) return '10';
+                    if (value === 100) return '100';
+                    if (value === 1000) return '1000';
+                    return '';
+                  },
+                },
+              },
+            },
+            plugins: {
+              legend: {
+                display: false,
+              },
+              title: {
+                display: true,
+                text: 'Click the buttons above to test each API!',
+              },
+            },
+          },
+        }
+      );
+
+      // Utility functions
+      function setLoading(active, text = 'Running test...') {
+        const loading = document.getElementById('loading');
+        const loadingText = document.getElementById('loadingText');
+        loading.className = active ? 'loading active' : 'loading';
+        loadingText.textContent = text;
+      }
+
+      function updateStatus(apiType, status) {
+        const statusEl = document.getElementById(`${apiType}-status`);
+        statusEl.className = `status-indicator ${status}`;
+      }
+
+      function updateChart(apiIndex, responseTime) {
+        // Ensure minimum value for logarithmic scale
+        const logValue = Math.max(responseTime, 0.1);
+        responseChart.data.datasets[0].data[apiIndex] = logValue;
+        responseChart.update();
+      }
+
+      function clearChartData() {
+        // Reset all chart data
+        responseChart.data.datasets[0].data = [0, 0, 0];
+        responseChart.options.plugins.title.text =
+          'Click the buttons above to test each API!';
+        responseChart.update();
+
+        // Reset all status indicators
+        updateStatus('basic', 'status-offline');
+        updateStatus('optimized', 'status-offline');
+        updateStatus('scaled', 'status-offline');
+
+        // Reset metrics in cards to default values
+        document.getElementById('basic-response').textContent = '~1-5ms';
+        document.getElementById('optimized-response').textContent = '~1ms';
+        document.getElementById('scaled-response').textContent = '~1ms';
+        document.getElementById('scaled-workers').textContent = '8';
+      }
+
+      // Test functions
+      async function testBasicAPI() {
+        setLoading(true, 'Testing Basic API with 10 requests...');
+        updateStatus('basic', 'status-testing');
+
+        try {
+          const numRequests = 10;
+          const startTime = performance.now();
+
+          // Send 10 requests to basic API (port 3002)
+          const promises = Array.from({ length: numRequests }, () =>
+            fetch('http://localhost:3002/user').then((r) => r.json())
+          );
+
+          await Promise.all(promises);
+          const endTime = performance.now();
+
+          const avgTime = (endTime - startTime) / numRequests;
+          const totalTime = endTime - startTime;
+          updateStatus('basic', 'status-online');
+          updateChart(0, avgTime);
+
+          // Update all metrics in the card
+          const throughput = (numRequests / (totalTime / 1000)).toFixed(1);
+          document.getElementById(
+            'basic-response'
+          ).textContent = `${avgTime.toFixed(1)}ms`;
+          document.getElementById('basic-total-time').textContent = `${(
+            totalTime / 1000
+          ).toFixed(1)}s`;
+          document.getElementById(
+            'basic-throughput'
+          ).textContent = `${throughput} req/s`;
+          document.getElementById(
+            'basic-requests'
+          ).textContent = `${numRequests}`;
+        } catch (error) {
+          updateStatus('basic', 'status-offline');
+        }
+
+        setLoading(false);
+      }
+
+      async function loadTestBasicAPI() {
+        setLoading(
+          true,
+          'High Load Test: Testing Basic API with 100 requests...'
+        );
+        updateStatus('basic', 'status-testing');
+
+        try {
+          const numRequests = 100;
+          const startTime = performance.now();
+
+          // Send 100 concurrent requests to basic API (port 3002)
+          const promises = Array.from({ length: numRequests }, () =>
+            fetch('http://localhost:3002/user').then((r) => r.json())
+          );
+
+          await Promise.all(promises);
+          const endTime = performance.now();
+
+          const avgTime = (endTime - startTime) / numRequests;
+          const totalTime = endTime - startTime;
+          updateStatus('basic', 'status-online');
+          updateChart(0, avgTime);
+
+          // Update all metrics in the card
+          const throughput = (numRequests / (totalTime / 1000)).toFixed(1);
+          document.getElementById(
+            'basic-response'
+          ).textContent = `${avgTime.toFixed(1)}ms`;
+          document.getElementById('basic-total-time').textContent = `${(
+            totalTime / 1000
+          ).toFixed(1)}s`;
+          document.getElementById(
+            'basic-throughput'
+          ).textContent = `${throughput} req/s`;
+          document.getElementById(
+            'basic-requests'
+          ).textContent = `${numRequests}`;
+        } catch (error) {
+          updateStatus('basic', 'status-offline');
+        }
+
+        setLoading(false);
+      }
+
+      async function testOptimizedAPI() {
+        setLoading(true, 'Testing Optimized API with 10 requests...');
+        updateStatus('optimized', 'status-testing');
+
+        try {
+          const numRequests = 10;
+          const startTime = performance.now();
+
+          // Send 10 requests to optimized API (port 3000)
+          const promises = Array.from({ length: numRequests }, () =>
+            fetch('http://localhost:3000/user').then((r) => r.json())
+          );
+
+          await Promise.all(promises);
+          const endTime = performance.now();
+
+          const avgTime = (endTime - startTime) / numRequests;
+          const totalTime = endTime - startTime;
+          updateStatus('optimized', 'status-online');
+          updateChart(1, avgTime);
+
+          // Update all metrics in the card
+          const throughput = (numRequests / (totalTime / 1000)).toFixed(1);
+          document.getElementById(
+            'optimized-response'
+          ).textContent = `${avgTime.toFixed(1)}ms`;
+          document.getElementById('optimized-total-time').textContent = `${(
+            totalTime / 1000
+          ).toFixed(1)}s`;
+          document.getElementById(
+            'optimized-throughput'
+          ).textContent = `${throughput} req/s`;
+          document.getElementById(
+            'optimized-requests'
+          ).textContent = `${numRequests}`;
+        } catch (error) {
+          updateStatus('optimized', 'status-offline');
+        }
+
+        setLoading(false);
+      }
+
+      async function testScaledAPI() {
+        setLoading(true, 'Testing Scaled API with 10 requests...');
+        updateStatus('scaled', 'status-testing');
+
+        try {
+          const numRequests = 10;
+          const startTime = performance.now();
+
+          // Send 10 requests to cluster API (port 3001)
+          const promises = Array.from({ length: numRequests }, () =>
+            fetch('http://localhost:3001/user').then((r) => r.json())
+          );
+
+          const results = await Promise.all(promises);
+          const endTime = performance.now();
+
+          const avgTime = (endTime - startTime) / numRequests;
+          updateStatus('scaled', 'status-online');
+          updateChart(2, avgTime);
+
+          // Show which workers handled the requests
+          const workers = [
+            ...new Set(results.map((r) => r.worker).filter(Boolean)),
+          ];
+          const workerInfo =
+            workers.length > 0 ? `\nWorkers used: ${workers.join(', ')}` : '';
+
+          // Update all metrics in the card
+          const totalTime = endTime - startTime;
+          const throughput = (numRequests / (totalTime / 1000)).toFixed(1);
+          document.getElementById(
+            'scaled-response'
+          ).textContent = `${avgTime.toFixed(1)}ms`;
+          document.getElementById('scaled-total-time').textContent = `${(
+            totalTime / 1000
+          ).toFixed(1)}s`;
+          document.getElementById(
+            'scaled-throughput'
+          ).textContent = `${throughput} req/s`;
+          document.getElementById(
+            'scaled-requests'
+          ).textContent = `${numRequests}`;
+          document.getElementById(
+            'scaled-workers'
+          ).textContent = `${workers.length} active`;
+
+          console.log('Scaled API test results:', {
+            workers: workers,
+            workersLength: workers.length,
+            results: results,
+          });
+        } catch (error) {
+          updateStatus('scaled', 'status-offline');
+        }
+
+        setLoading(false);
+      }
+
+      async function loadTestOptimizedAPI() {
+        setLoading(
+          true,
+          'High Load Test: Testing Optimized API with 100 requests...'
+        );
+        updateStatus('optimized', 'status-testing');
+
+        try {
+          const numRequests = 100;
+          const startTime = performance.now();
+
+          // Send 100 concurrent requests to optimized API (port 3000)
+          const promises = Array.from({ length: numRequests }, () =>
+            fetch('http://localhost:3000/user').then((r) => r.json())
+          );
+
+          const results = await Promise.all(promises);
+          const endTime = performance.now();
+
+          const avgTime = (endTime - startTime) / numRequests;
+          const totalTime = endTime - startTime;
+          updateStatus('optimized', 'status-online');
+          updateChart(1, avgTime);
+
+          // Update all metrics in the card
+          const throughput = (numRequests / (totalTime / 1000)).toFixed(1);
+          document.getElementById(
+            'optimized-response'
+          ).textContent = `${avgTime.toFixed(1)}ms`;
+          document.getElementById('optimized-total-time').textContent = `${(
+            totalTime / 1000
+          ).toFixed(1)}s`;
+          document.getElementById(
+            'optimized-throughput'
+          ).textContent = `${throughput} req/s`;
+          document.getElementById(
+            'optimized-requests'
+          ).textContent = `${numRequests}`;
+        } catch (error) {
+          updateStatus('optimized', 'status-offline');
+        }
+
+        setLoading(false);
+      }
+
+      async function loadTestScaledAPI() {
+        setLoading(
+          true,
+          'High Load Test: Testing Scaled API with 100 requests...'
+        );
+        updateStatus('scaled', 'status-testing');
+
+        try {
+          const numRequests = 100;
+          const startTime = performance.now();
+
+          // Send 100 concurrent requests to cluster API (port 3001)
+          const promises = Array.from({ length: numRequests }, () =>
+            fetch('http://localhost:3001/user').then((r) => r.json())
+          );
+
+          const results = await Promise.all(promises);
+          const endTime = performance.now();
+
+          const avgTime = (endTime - startTime) / numRequests;
+          const totalTime = endTime - startTime;
+          updateStatus('scaled', 'status-online');
+          updateChart(2, avgTime);
+
+          // Show which workers handled the requests
+          const workers = [
+            ...new Set(results.map((r) => r.worker).filter(Boolean)),
+          ];
+          const workerInfo =
+            workers.length > 0 ? `\nWorkers used: ${workers.join(', ')}` : '';
+
+          // Update all metrics in the card
+          const throughput = (numRequests / (totalTime / 1000)).toFixed(1);
+          document.getElementById(
+            'scaled-response'
+          ).textContent = `${avgTime.toFixed(1)}ms`;
+          document.getElementById('scaled-total-time').textContent = `${(
+            totalTime / 1000
+          ).toFixed(1)}s`;
+          document.getElementById(
+            'scaled-throughput'
+          ).textContent = `${throughput} req/s`;
+          document.getElementById(
+            'scaled-requests'
+          ).textContent = `${numRequests}`;
+          document.getElementById(
+            'scaled-workers'
+          ).textContent = `${workers.length} active`;
+
+          console.log('Scaled API High Load Test results:', {
+            workers: workers,
+            workersLength: workers.length,
+            results: results.length,
+            totalTime: totalTime,
+            avgTime: avgTime,
+          });
+        } catch (error) {
+          updateStatus('scaled', 'status-offline');
+        }
+
+        setLoading(false);
+      }
+
+      // CPU Intensive Tests
+      async function cpuTestBasicAPI() {
+        setLoading(
+          true,
+          '🔥 CPU Test: Testing Basic API with heavy CPU load...'
+        );
+        updateStatus('basic', 'status-testing');
+
+        try {
+          const numRequests = 20;
+          const startTime = performance.now();
+
+          // Send concurrent requests for fair comparison
+          const promises = Array.from({ length: numRequests }, () =>
+            fetch('http://localhost:3002/cpu-intensive').then((r) => r.json())
+          );
+
+          const results = await Promise.all(promises);
+          const endTime = performance.now();
+          const totalTime = endTime - startTime;
+          // Calculate actual concurrent performance (total time / requests)
+          const avgTime = totalTime / numRequests;
+
+          updateStatus('basic', 'status-online');
+          updateChart(0, avgTime);
+
+          // Update all metrics
+          const throughput = (numRequests / (totalTime / 1000)).toFixed(1);
+          document.getElementById(
+            'basic-response'
+          ).textContent = `${avgTime.toFixed(1)}ms`;
+          document.getElementById('basic-total-time').textContent = `${(
+            totalTime / 1000
+          ).toFixed(1)}s`;
+          document.getElementById(
+            'basic-throughput'
+          ).textContent = `${throughput} req/s`;
+          document.getElementById(
+            'basic-requests'
+          ).textContent = `${numRequests}`;
+        } catch (error) {
+          updateStatus('basic', 'status-offline');
+        }
+
+        setLoading(false);
+      }
+
+      async function cpuTestOptimizedAPI() {
+        setLoading(
+          true,
+          '🔥 CPU Test: Testing Redis API with heavy CPU load...'
+        );
+        updateStatus('optimized', 'status-testing');
+
+        try {
+          const numRequests = 20;
+          const startTime = performance.now();
+
+          // Send concurrent requests for fair comparison (no rate limits)
+          const promises = Array.from({ length: numRequests }, () =>
+            fetch('http://localhost:3000/cpu-intensive').then((r) => r.json())
+          );
+
+          const results = await Promise.all(promises);
+          const endTime = performance.now();
+          const totalTime = endTime - startTime;
+          // Calculate actual concurrent performance (total time / requests)
+          const avgTime = totalTime / numRequests;
+
+          updateStatus('optimized', 'status-online');
+          updateChart(1, avgTime);
+
+          // Update all metrics
+          const throughput = (numRequests / (totalTime / 1000)).toFixed(1);
+          document.getElementById(
+            'optimized-response'
+          ).textContent = `${avgTime.toFixed(1)}ms`;
+          document.getElementById('optimized-total-time').textContent = `${(
+            totalTime / 1000
+          ).toFixed(1)}s`;
+          document.getElementById(
+            'optimized-throughput'
+          ).textContent = `${throughput} req/s`;
+          document.getElementById(
+            'optimized-requests'
+          ).textContent = `${numRequests}`;
+        } catch (error) {
+          updateStatus('optimized', 'status-offline');
+        }
+
+        setLoading(false);
+      }
+
+      async function cpuTestScaledAPI() {
+        setLoading(
+          true,
+          '🔥 CPU Test: Testing Cluster API with heavy CPU load...'
+        );
+        updateStatus('scaled', 'status-testing');
+
+        try {
+          const numRequests = 20;
+          const startTime = performance.now();
+
+          // Send concurrent requests to demonstrate clustering
+          const promises = Array.from({ length: numRequests }, () =>
+            fetch('http://localhost:3001/cpu-intensive').then((r) => r.json())
+          );
+
+          const results = await Promise.all(promises);
+          const endTime = performance.now();
+
+          const totalTime = endTime - startTime;
+          // Calculate actual concurrent performance (total time / requests)
+          const avgTime = totalTime / numRequests;
+
+          // Show worker distribution
+          const workers = [
+            ...new Set(results.map((r) => r.worker).filter(Boolean)),
+          ];
+
+          updateStatus('scaled', 'status-online');
+          updateChart(2, avgTime);
+
+          // Update all metrics
+          const throughput = (numRequests / (totalTime / 1000)).toFixed(1);
+          document.getElementById(
+            'scaled-response'
+          ).textContent = `${avgTime.toFixed(1)}ms`;
+          document.getElementById('scaled-total-time').textContent = `${(
+            totalTime / 1000
+          ).toFixed(1)}s`;
+          document.getElementById(
+            'scaled-throughput'
+          ).textContent = `${throughput} req/s`;
+          document.getElementById(
+            'scaled-requests'
+          ).textContent = `${numRequests}`;
+          document.getElementById(
+            'scaled-workers'
+          ).textContent = `${workers.length} active`;
+        } catch (error) {
+          updateStatus('scaled', 'status-offline');
+        }
+
+        setLoading(false);
+      }
+
+      // Chart control functions
+      async function runAllAPIs(numRequests = 10) {
+        setLoading(
+          true,
+          `Running all APIs for comparison (${numRequests} requests)...`
+        );
+
+        const responses = {};
+
+        try {
+          // Test Basic API
+          updateStatus('basic', 'status-testing');
+          const basicStart = performance.now();
+
+          const basicPromises = Array.from({ length: numRequests }, () =>
+            fetch('http://localhost:3002/user').then((r) => r.json())
+          );
+          await Promise.all(basicPromises);
+
+          const basicEnd = performance.now();
+          responses.basic = (basicEnd - basicStart) / numRequests;
+          updateStatus('basic', 'status-online');
+
+          // Test Redis API
+          updateStatus('optimized', 'status-testing');
+          const redisStart = performance.now();
+
+          const redisPromises = Array.from({ length: numRequests }, () =>
+            fetch('http://localhost:3000/user').then((r) => r.json())
+          );
+          await Promise.all(redisPromises);
+
+          const redisEnd = performance.now();
+          responses.redis = (redisEnd - redisStart) / numRequests;
+          updateStatus('optimized', 'status-online');
+
+          // Test Cluster API
+          updateStatus('scaled', 'status-testing');
+          const clusterStart = performance.now();
+
+          const clusterPromises = Array.from({ length: numRequests }, () =>
+            fetch('http://localhost:3001/user').then((r) => r.json())
+          );
+          await Promise.all(clusterPromises);
+
+          const clusterEnd = performance.now();
+          responses.cluster = (clusterEnd - clusterStart) / numRequests;
+          updateStatus('scaled', 'status-online');
+
+          // Update chart
+          updateChart(0, responses.basic);
+          updateChart(1, responses.redis);
+          updateChart(2, responses.cluster);
+
+          // Update displayed metrics
+          document.getElementById(
+            'basic-response'
+          ).textContent = `${responses.basic.toFixed(1)}ms`;
+          document.getElementById(
+            'optimized-response'
+          ).textContent = `${responses.redis.toFixed(1)}ms`;
+          document.getElementById(
+            'scaled-response'
+          ).textContent = `${responses.cluster.toFixed(1)}ms`;
+        } catch (error) {
+          console.error('Error running all APIs:', error);
+        }
+
+        setLoading(false);
+      }
+
+      async function runCPUTest() {
+        setLoading(
+          true,
+          '🔥 Running CPU-intensive test on all APIs (20 concurrent requests each)...'
+        );
+
+        const responses = {};
+
+        try {
+          // Test Basic API CPU endpoint
+          updateStatus('basic', 'status-testing');
+          const basicStart = performance.now();
+          const basicPromises = Array.from({ length: 20 }, () =>
+            fetch('http://localhost:3002/cpu-intensive').then((r) => r.json())
+          );
+          const basicResults = await Promise.all(basicPromises);
+          const basicEnd = performance.now();
+          const basicTime = (basicEnd - basicStart) / 20; // Average per request
+          updateStatus('basic', 'status-online');
+          updateChart(0, basicTime);
+          responses.basic = basicTime;
+
+          // Update Basic API metrics
+          const basicTotalTime = basicEnd - basicStart;
+          const basicThroughput = (20 / (basicTotalTime / 1000)).toFixed(1);
+          document.getElementById(
+            'basic-response'
+          ).textContent = `${basicTime.toFixed(1)}ms`;
+          document.getElementById('basic-total-time').textContent = `${(
+            basicTotalTime / 1000
+          ).toFixed(1)}s`;
+          document.getElementById(
+            'basic-throughput'
+          ).textContent = `${basicThroughput} req/s`;
+          document.getElementById('basic-requests').textContent = '20';
+
+          // Test Redis API CPU endpoint
+          updateStatus('optimized', 'status-testing');
+          const redisStart = performance.now();
+          const redisPromises = Array.from({ length: 20 }, () =>
+            fetch('http://localhost:3000/cpu-intensive').then((r) => r.json())
+          );
+          const redisResults = await Promise.all(redisPromises);
+          const redisEnd = performance.now();
+          const redisTime = (redisEnd - redisStart) / 20; // Average per request
+          updateStatus('optimized', 'status-online');
+          updateChart(1, redisTime);
+          responses.optimized = redisTime;
+
+          // Update Redis API metrics
+          const redisTotalTime = redisEnd - redisStart;
+          const redisThroughput = (20 / (redisTotalTime / 1000)).toFixed(1);
+          document.getElementById(
+            'optimized-response'
+          ).textContent = `${redisTime.toFixed(1)}ms`;
+          document.getElementById('optimized-total-time').textContent = `${(
+            redisTotalTime / 1000
+          ).toFixed(1)}s`;
+          document.getElementById(
+            'optimized-throughput'
+          ).textContent = `${redisThroughput} req/s`;
+          document.getElementById('optimized-requests').textContent = '20';
+
+          // Test Cluster API CPU endpoint
+          updateStatus('scaled', 'status-testing');
+          const clusterStart = performance.now();
+          const clusterPromises = Array.from({ length: 20 }, () =>
+            fetch('http://localhost:3001/cpu-intensive').then((r) => r.json())
+          );
+          const clusterResults = await Promise.all(clusterPromises);
+          const clusterEnd = performance.now();
+          const clusterTime = (clusterEnd - clusterStart) / 20; // Average per request
+          updateStatus('scaled', 'status-online');
+          updateChart(2, clusterTime);
+          responses.scaled = clusterTime;
+
+          // Update Cluster API metrics
+          const clusterTotalTime = clusterEnd - clusterStart;
+          const clusterThroughput = (20 / (clusterTotalTime / 1000)).toFixed(1);
+          const clusterWorkers = [
+            ...new Set(clusterResults.map((r) => r.worker).filter(Boolean)),
+          ];
+          document.getElementById(
+            'scaled-response'
+          ).textContent = `${clusterTime.toFixed(1)}ms`;
+          document.getElementById('scaled-total-time').textContent = `${(
+            clusterTotalTime / 1000
+          ).toFixed(1)}s`;
+          document.getElementById(
+            'scaled-throughput'
+          ).textContent = `${clusterThroughput} req/s`;
+          document.getElementById('scaled-requests').textContent = '20';
+          document.getElementById(
+            'scaled-workers'
+          ).textContent = `${clusterWorkers.length} active`;
+
+          // Update chart title to show this was a CPU test
+          responseChart.options.plugins.title.text =
+            '🔥 CPU-Intensive Test Results (20 concurrent requests each)';
+          responseChart.update();
+
+          console.log('🔥 CPU Test Results:');
+          console.log(
+            `Basic API: ${basicTime.toFixed(1)}ms avg (${basicTotalTime.toFixed(
+              1
+            )}ms total)`
+          );
+          console.log(
+            `Redis API: ${redisTime.toFixed(1)}ms avg (${redisTotalTime.toFixed(
+              1
+            )}ms total)`
+          );
+          console.log(
+            `Cluster API: ${clusterTime.toFixed(
+              1
+            )}ms avg (${clusterTotalTime.toFixed(1)}ms total)`
+          );
+          console.log(`Cluster workers used: ${clusterWorkers.join(', ')}`);
+        } catch (error) {
+          console.error('Error running CPU test:', error);
+        }
+
+        setLoading(false);
+      }
+
+      function clearData() {
+        // Clear main chart
+        clearChartData();
+      }
+
+      // Initialize
+      updateStatus('basic', 'status-offline');
+      updateStatus('optimized', 'status-offline');
+      updateStatus('scaled', 'status-offline');
+    </script>
+  </body>
+</html>
