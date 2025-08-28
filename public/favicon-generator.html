@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Favicon Generator</title>
+  </head>
+  <body>
+    <canvas
+      id="canvas"
+      width="32"
+      height="32"
+      style="border: 1px solid black; transform: scale(10)"
+    ></canvas>
+
+    <script>
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+
+      // Background gradient
+      const bgGrad = ctx.createLinearGradient(0, 0, 32, 32);
+      bgGrad.addColorStop(0, '#667eea');
+      bgGrad.addColorStop(1, '#764ba2');
+
+      // Draw background circle
+      ctx.fillStyle = bgGrad;
+      ctx.beginPath();
+      ctx.arc(16, 16, 16, 0, 2 * Math.PI);
+      ctx.fill();
+
+      // Draw speedometer gauge (arc)
+      ctx.strokeStyle = '#4caf50';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(16, 16, 12, -Math.PI / 2, 0);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#ffeb3b';
+      ctx.beginPath();
+      ctx.arc(16, 16, 12, 0, Math.PI / 2);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#ff8a50';
+      ctx.beginPath();
+      ctx.arc(16, 16, 12, Math.PI / 2, Math.PI);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#f44336';
+      ctx.beginPath();
+      ctx.arc(16, 16, 12, Math.PI, (3 * Math.PI) / 2);
+      ctx.stroke();
+
+      // Draw inner circle
+      ctx.fillStyle = '#1a1a2e';
+      ctx.beginPath();
+      ctx.arc(16, 16, 8, 0, 2 * Math.PI);
+      ctx.fill();
+
+      // Draw needle
+      ctx.strokeStyle = '#feca57';
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(16, 16);
+      ctx.lineTo(16, 10);
+      ctx.stroke();
+
+      // Draw center dot
+      ctx.fillStyle = '#feca57';
+      ctx.beginPath();
+      ctx.arc(16, 16, 2, 0, 2 * Math.PI);
+      ctx.fill();
+
+      // Performance indicators
+      ctx.fillStyle = '#4caf50';
+      ctx.beginPath();
+      ctx.arc(16, 6, 1, 0, 2 * Math.PI);
+      ctx.fill();
+
+      ctx.fillStyle = '#ff8a50';
+      ctx.beginPath();
+      ctx.arc(24, 12, 1, 0, 2 * Math.PI);
+      ctx.fill();
+
+      ctx.fillStyle = '#ffeb3b';
+      ctx.beginPath();
+      ctx.arc(8, 12, 1, 0, 2 * Math.PI);
+      ctx.fill();
+
+      // Convert to data URL and create download links
+      setTimeout(() => {
+        const dataURL = canvas.toDataURL('image/png');
+
+        // Create download link for PNG
+        const pngLink = document.createElement('a');
+        pngLink.download = 'favicon.png';
+        pngLink.href = dataURL;
+        pngLink.textContent = 'Download PNG Favicon';
+        pngLink.style.display = 'block';
+        pngLink.style.margin = '10px';
+        document.body.appendChild(pngLink);
+
+        console.log(
+          'Favicon generated! Right-click the canvas and save as favicon.png, or use the download link.'
+        );
+      }, 100);
+    </script>
+  </body>
+</html>
