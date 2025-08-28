@@ -2,6 +2,7 @@
   "name": "scalable-api",
   "version": "1.0.0",
   "scripts": {
+    "start": "node dist/redis-api.js",
     "start:basic": "node dist/basic-api.js",
     "start:redis": "node dist/redis-api.js",
     "start:cluster": "node dist/cluster-api.js",

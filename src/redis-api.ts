@@ -24,6 +24,10 @@ const app = express();
 app.use(cors());
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
+app.get('/', (req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+});
+
 const redisClient = createClient();
 redisClient.connect().catch(console.error);
 
