@@ -6,7 +6,7 @@
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #3a3a5c 0%, #1a1a2e 100%);
   min-height: 100vh;
   padding: 20px;
 }
@@ -101,52 +101,72 @@ h1 {
 }
 
 .test-button {
-  padding: 12px 24px;
+  padding: 10px 16px;
   border: none;
   border-radius: 10px;
   font-weight: bold;
   color: white;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 1rem;
+  font-size: 0.9rem;
   width: 100%;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .load-test-button {
-  padding: 8px 16px;
+  padding: 10px 16px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   font-weight: bold;
   color: white;
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 0.9rem;
   width: 100%;
-  margin-bottom: 10px;
-  background: linear-gradient(45deg, #ff9800, #f57c00);
+  margin-bottom: 8px;
+  background: linear-gradient(45deg, #ff8a50, #ff6f00);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .cpu-test-button {
-  padding: 8px 16px;
+  padding: 10px 16px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   font-weight: bold;
   color: white;
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 0.9rem;
   width: 100%;
-  margin-bottom: 10px;
-  background: linear-gradient(45deg, #e91e63, #ad1457);
-  border: 2px solid #c2185b;
+  margin-bottom: 8px;
+  background: linear-gradient(45deg, #9c27b0, #7b1fa2);
+  border: 2px solid #7b1fa2;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .test-button:hover,
-.load-test-button:hover,
-.cpu-test-button:hover {
+.load-test-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.cpu-test-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(156, 39, 176, 0.4);
+  background: linear-gradient(45deg, #7b1fa2, #6a1b9a);
 }
 
 .basic-api .test-button,
@@ -158,7 +178,7 @@ h1 {
 .basic-api .load-test-button,
 .optimized-api .load-test-button,
 .scaled-api .load-test-button {
-  background: linear-gradient(45deg, #ff9800, #f57c00);
+  background: linear-gradient(45deg, #ff8a50, #ff6f00);
 }
 
 /* Charts Section */
@@ -169,20 +189,65 @@ h1 {
   gap: 20px;
 }
 
+@media (max-width: 1200px) {
+  .charts-section {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .charts-section {
+    gap: 10px;
+  }
+}
+
 .chart-card {
   background: rgba(255, 255, 255, 0.95);
   padding: 25px;
   border-radius: 15px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  height: 450px;
+  min-height: 450px;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .chart-card {
+    padding: 15px;
+    min-height: 400px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chart-card {
+    padding: 10px;
+    min-height: 350px;
+  }
 }
 
 .chart-card canvas {
   flex: 1;
   max-height: 320px !important;
   min-height: 250px !important;
+  width: 100% !important;
+}
+
+@media (max-width: 768px) {
+  .chart-card canvas {
+    max-height: 280px !important;
+    min-height: 200px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .chart-card canvas {
+    max-height: 250px !important;
+    min-height: 180px !important;
+  }
 }
 
 .chart-header {
@@ -196,61 +261,88 @@ h1 {
   text-align: center;
   color: #333;
   font-weight: bold;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
+}
+
+.speedometer-card .chart-title {
+  color: white;
+  font-size: 1.4rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .chart-controls {
   display: flex;
-  gap: 8px;
+  gap: 12px;
   justify-content: center;
   flex-wrap: wrap;
 }
 
 .chart-test-button {
-  padding: 6px 12px;
+  padding: 12px 18px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-weight: bold;
   color: white;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 0.8rem;
-  background: linear-gradient(45deg, #2196f3, #1976d2);
+  font-size: 1rem;
+  background: linear-gradient(45deg, #4caf50, #45a049);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .chart-test-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 3px 10px rgba(33, 150, 243, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+}
+
+/* Specific button colors to match API cards */
+.chart-test-button:nth-child(2) {
+  background: linear-gradient(45deg, #ff8a50, #ff6f00);
+}
+
+.chart-test-button:nth-child(2):hover {
+  box-shadow: 0 5px 15px rgba(255, 138, 80, 0.4);
 }
 
 .cpu-load-button {
-  background: linear-gradient(45deg, #ff9800, #f57c00) !important;
+  background: linear-gradient(45deg, #9c27b0, #7b1fa2) !important;
   color: white !important;
   font-weight: bold;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .cpu-load-button:hover {
-  background: linear-gradient(45deg, #f57c00, #e65100) !important;
-  transform: translateY(-1px);
-  box-shadow: 0 3px 10px rgba(255, 152, 0, 0.4) !important;
+  background: linear-gradient(45deg, #7b1fa2, #6a1b9a) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(156, 39, 176, 0.4) !important;
 }
 
 .clear-button {
-  padding: 6px 12px;
-  background: linear-gradient(45deg, #ff6b6b, #e74c3c);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 0.8rem;
+  padding: 12px 18px;
+  background: transparent;
+  color: #888;
+  border: 2px solid #555;
+  border-radius: 8px;
+  font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .clear-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 3px 10px rgba(231, 76, 60, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(85, 85, 85, 0.3);
+  border-color: #777;
+  color: #aaa;
 }
 
 /* Loading Indicator */
@@ -304,7 +396,7 @@ h1 {
 }
 
 .status-testing {
-  background: #ff9800;
+  background: #ff8a50;
   animation: pulse 1s infinite;
 }
 
@@ -318,15 +410,179 @@ h1 {
   }
 }
 
+/* Speedometer Styles */
+.speedometer-card {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  color: white;
+  border: none;
+}
+
+.speedometer-card .chart-title {
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.speedometer-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  width: 100%;
+}
+
+.speedometer-status-top {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.speedometer {
+  position: relative;
+  width: 300px;
+  height: 300px;
+}
+
+@media (max-width: 768px) {
+  .speedometer-container {
+    min-height: 350px;
+  }
+
+  .speedometer {
+    width: 250px;
+    height: 250px;
+  }
+
+  .speedometer-status-top {
+    margin-bottom: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .speedometer-container {
+    min-height: 300px;
+  }
+
+  .speedometer {
+    width: 200px;
+    height: 200px;
+  }
+
+  .speedometer-status-top {
+    margin-bottom: 10px;
+  }
+}
+
+.speedometer-gauge {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    #4caf50 0deg 72deg,
+    #ffeb3b 72deg 144deg,
+    #ff8a50 144deg 216deg,
+    #f44336 216deg 288deg,
+    #9c27b0 288deg 360deg
+  );
+  padding: 20px;
+}
+
+.speedometer-gauge::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  background: #1a1a2e;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.speedometer-needle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 120px;
+  background: linear-gradient(to top, #ff6b6b, #feca57);
+  transform-origin: bottom center;
+  transform: translate(-50%, -100%) rotate(0deg);
+  border-radius: 2px;
+  z-index: 3;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+}
+
+.speedometer-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(circle, #feca57, #ff6b6b);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+  box-shadow: 0 0 15px rgba(255, 107, 107, 0.8);
+}
+
+.speedometer-labels {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 30px;
+  margin-top: 10px;
+}
+
+.speed-label {
+  position: absolute;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+  transform: translateX(-50%);
+}
+
+.speedometer-display {
+  position: absolute;
+  top: 65%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 2;
+}
+
+.speed-value {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #feca57;
+  text-shadow: 0 0 10px rgba(254, 202, 87, 0.5);
+  margin-bottom: 5px;
+}
+
+.speed-unit {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.speed-status {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-weight: 500;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
   .api-cards {
     grid-template-columns: 1fr;
     gap: 15px;
-  }
-
-  .charts-section {
-    grid-template-columns: 1fr;
   }
 
   h1 {
@@ -343,7 +599,59 @@ h1 {
     padding: 20px;
   }
 
+  .chart-controls {
+    gap: 8px;
+    flex-direction: column;
+  }
+
+  .chart-test-button,
+  .clear-button {
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    min-height: 40px;
+    width: 100%;
+  }
+
+  .chart-title {
+    font-size: 1.1rem;
+  }
+
+  .speedometer-card .chart-title {
+    font-size: 1.2rem;
+  }
+
+  .speed-value {
+    font-size: 2rem;
+  }
+
+  .speed-status {
+    font-size: 0.9rem;
+    padding: 6px 12px;
+  }
+
   h1 {
     font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .chart-controls {
+    gap: 6px;
+  }
+
+  .chart-test-button,
+  .clear-button {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    min-height: 36px;
+  }
+
+  .speed-value {
+    font-size: 1.8rem;
+  }
+
+  .speed-status {
+    font-size: 0.8rem;
+    padding: 4px 8px;
   }
 }

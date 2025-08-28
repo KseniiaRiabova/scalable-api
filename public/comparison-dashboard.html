@@ -168,28 +168,79 @@
 
       <!-- Charts Section -->
       <div class="charts-section">
+        <!-- Real-time Performance Gauge -->
+        <div class="chart-card speedometer-card">
+          <div class="chart-header">
+            <div class="chart-title">Average Response Time</div>
+            <div class="chart-controls">
+              <button
+                class="chart-test-button"
+                onclick="startRealtimeMonitoring()"
+              >
+                Continue
+              </button>
+              <button
+                class="chart-test-button"
+                onclick="stopRealtimeMonitoring()"
+              >
+                Stop
+              </button>
+            </div>
+            <div
+              style="
+                margin-top: 10px;
+                font-size: 0.9rem;
+                color: rgba(255, 255, 255, 0.8);
+                text-align: center;
+              "
+            >
+              Shows live performance during tests or continuous API monitoring
+            </div>
+          </div>
+          <div class="speedometer-container">
+            <div class="speedometer-status-top">
+              <div class="speed-status" id="speed-status">
+                Monitoring Stopped
+              </div>
+            </div>
+            <div class="speedometer">
+              <div class="speedometer-gauge">
+                <div class="speedometer-needle" id="speedometer-needle"></div>
+                <div class="speedometer-center"></div>
+              </div>
+              <div class="speedometer-labels">
+                <span class="speed-label" style="left: 10%">0ms</span>
+                <span class="speed-label" style="left: 25%">25ms</span>
+                <span class="speed-label" style="left: 50%">50ms</span>
+                <span class="speed-label" style="left: 75%">100ms</span>
+                <span class="speed-label" style="left: 90%">200ms+</span>
+              </div>
+              <div class="speedometer-display">
+                <div class="speed-value" id="current-speed">0</div>
+                <div class="speed-unit">ms avg</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Response Time Comparison Chart -->
         <div class="chart-card">
           <div class="chart-header">
-            <div class="chart-title">
-              Response Time Comparison (10 & 100 requests)
-            </div>
+            <div class="chart-title">Response Time Comparison</div>
             <div class="chart-controls">
               <button class="chart-test-button" onclick="runAllAPIs(10)">
-                Run All APIs (10 requests)
+                3 APIs (10 requests)
               </button>
               <button class="chart-test-button" onclick="runAllAPIs(100)">
-                Run All APIs (100 requests)
+                3 APIs (100 requests)
               </button>
               <button
                 class="chart-test-button cpu-load-button"
                 onclick="runCPUTest()"
               >
-                🔥 Run All APIs High CPU Load
+                🔥 3 APIs High CPU Load
               </button>
-              <button class="clear-button" onclick="clearData()">
-                Clear All Data
-              </button>
+              <button class="clear-button" onclick="clearData()">🔄</button>
             </div>
           </div>
           <canvas id="responseComparisonChart"></canvas>
@@ -313,6 +364,9 @@
           updateStatus('basic', 'status-online');
           updateChart(0, avgTime);
 
+          // Update speedometer during test
+          updateSpeedometerDuringTest('Basic API', avgTime);
+
           // Update all metrics in the card
           const throughput = (numRequests / (totalTime / 1000)).toFixed(1);
           document.getElementById(
@@ -331,6 +385,10 @@
           updateStatus('basic', 'status-offline');
         }
 
+        // Reset test progress after a short delay
+        setTimeout(() => {
+          resetTestProgress();
+        }, 2000);
         setLoading(false);
       }
 
@@ -358,6 +416,9 @@
           updateStatus('basic', 'status-online');
           updateChart(0, avgTime);
 
+          // Update speedometer during load test
+          updateSpeedometerDuringTest('Basic API (High Load)', avgTime);
+
           // Update all metrics in the card
           const throughput = (numRequests / (totalTime / 1000)).toFixed(1);
           document.getElementById(
@@ -376,6 +437,10 @@
           updateStatus('basic', 'status-offline');
         }
 
+        // Reset test progress after a short delay
+        setTimeout(() => {
+          resetTestProgress();
+        }, 2000);
         setLoading(false);
       }
 
@@ -400,6 +465,9 @@
           updateStatus('optimized', 'status-online');
           updateChart(1, avgTime);
 
+          // Update speedometer during test
+          updateSpeedometerDuringTest('Optimized API', avgTime);
+
           // Update all metrics in the card
           const throughput = (numRequests / (totalTime / 1000)).toFixed(1);
           document.getElementById(
@@ -418,6 +486,10 @@
           updateStatus('optimized', 'status-offline');
         }
 
+        // Reset test progress after a short delay
+        setTimeout(() => {
+          resetTestProgress();
+        }, 2000);
         setLoading(false);
       }
 
@@ -440,6 +512,9 @@
           const avgTime = (endTime - startTime) / numRequests;
           updateStatus('scaled', 'status-online');
           updateChart(2, avgTime);
+
+          // Update speedometer during test
+          updateSpeedometerDuringTest('Scaled API', avgTime);
 
           // Show which workers handled the requests
           const workers = [
@@ -476,6 +551,10 @@
           updateStatus('scaled', 'status-offline');
         }
 
+        // Reset test progress after a short delay
+        setTimeout(() => {
+          resetTestProgress();
+        }, 2000);
         setLoading(false);
       }
 
@@ -758,6 +837,9 @@
           responses.basic = (basicEnd - basicStart) / numRequests;
           updateStatus('basic', 'status-online');
 
+          // Update speedometer for Basic API
+          updateSpeedometerDuringTest('Basic API (Batch)', responses.basic);
+
           // Test Redis API
           updateStatus('optimized', 'status-testing');
           const redisStart = performance.now();
@@ -771,6 +853,9 @@
           responses.redis = (redisEnd - redisStart) / numRequests;
           updateStatus('optimized', 'status-online');
 
+          // Update speedometer for Redis API
+          updateSpeedometerDuringTest('Optimized API (Batch)', responses.redis);
+
           // Test Cluster API
           updateStatus('scaled', 'status-testing');
           const clusterStart = performance.now();
@@ -783,6 +868,16 @@
           const clusterEnd = performance.now();
           responses.cluster = (clusterEnd - clusterStart) / numRequests;
           updateStatus('scaled', 'status-online');
+
+          // Update speedometer for Cluster API and show overall average
+          updateSpeedometerDuringTest('Scaled API (Batch)', responses.cluster);
+
+          // After all tests, show overall average
+          setTimeout(() => {
+            const overallAvg =
+              (responses.basic + responses.redis + responses.cluster) / 3;
+            updateSpeedometerDuringTest('All APIs Average', overallAvg);
+          }, 1000);
 
           // Update chart
           updateChart(0, responses.basic);
@@ -803,6 +898,10 @@
           console.error('Error running all APIs:', error);
         }
 
+        // Reset test progress after completion
+        setTimeout(() => {
+          resetTestProgress();
+        }, 3000);
         setLoading(false);
       }
 
@@ -934,6 +1033,168 @@
       function clearData() {
         // Clear main chart
         clearChartData();
+      }
+
+      // Real-time speedometer functionality
+      let monitoringInterval = null;
+      let isMonitoring = false;
+      let testInProgress = false;
+      let currentTestResults = [];
+      const APIs = [
+        { url: 'http://localhost:3002/user', name: 'Basic' },
+        { url: 'http://localhost:3000/user', name: 'Optimized' },
+        { url: 'http://localhost:3001/user', name: 'Scaled' },
+      ];
+
+      function updateSpeedometerNeedle(value, testName = null) {
+        const needle = document.getElementById('speedometer-needle');
+        const speedValue = document.getElementById('current-speed');
+        const statusElement = document.getElementById('speed-status');
+
+        // Clamp value between 0 and 200ms for display
+        const clampedValue = Math.min(value, 200);
+
+        // Convert to angle (0-288 degrees, leaving 72 degrees gap at bottom)
+        const angle = (clampedValue / 200) * 288;
+
+        needle.style.transform = `translate(-50%, -100%) rotate(${angle}deg)`;
+        speedValue.textContent = value.toFixed(1);
+
+        // Update status text based on context
+        if (testInProgress && testName) {
+          statusElement.textContent = `Testing ${testName}...`;
+        } else if (isMonitoring && !testInProgress) {
+          statusElement.textContent = 'Continuous Monitoring';
+        } else {
+          statusElement.textContent = 'Monitoring Stopped';
+        }
+
+        // Update color based on performance
+        if (value < 10) {
+          speedValue.style.color = '#4caf50';
+        } else if (value < 25) {
+          speedValue.style.color = '#ffeb3b';
+        } else if (value < 50) {
+          speedValue.style.color = '#ff8a50';
+        } else {
+          speedValue.style.color = '#f44336';
+        }
+      }
+
+      // Function to update speedometer during tests
+      function updateSpeedometerDuringTest(testName, avgResponseTime) {
+        testInProgress = true;
+        updateSpeedometerNeedle(avgResponseTime, testName);
+
+        // Add to current test results for averaging
+        currentTestResults.push({
+          test: testName,
+          time: avgResponseTime,
+          timestamp: Date.now(),
+        });
+
+        // Keep only recent results (last 10 results)
+        if (currentTestResults.length > 10) {
+          currentTestResults = currentTestResults.slice(-10);
+        }
+      }
+
+      // Function to calculate overall average from recent tests
+      function getRecentTestAverage() {
+        if (currentTestResults.length === 0) return 0;
+        const sum = currentTestResults.reduce(
+          (acc, result) => acc + result.time,
+          0
+        );
+        return sum / currentTestResults.length;
+      }
+
+      async function measureAPIPerformance() {
+        const results = [];
+
+        for (const api of APIs) {
+          try {
+            const startTime = performance.now();
+            const response = await fetch(api.url);
+
+            if (response.ok) {
+              const endTime = performance.now();
+              results.push({
+                name: api.name,
+                time: endTime - startTime,
+                success: true,
+              });
+            }
+          } catch (error) {
+            results.push({
+              name: api.name,
+              time: 0,
+              success: false,
+            });
+          }
+        }
+
+        // Calculate average of successful requests
+        const successfulResults = results.filter((r) => r.success);
+        if (successfulResults.length > 0) {
+          const avgTime =
+            successfulResults.reduce((sum, r) => sum + r.time, 0) /
+            successfulResults.length;
+          return {
+            avgTime,
+            details: results,
+          };
+        }
+
+        return { avgTime: 0, details: results };
+      }
+
+      async function startRealtimeMonitoring() {
+        if (isMonitoring) return;
+
+        isMonitoring = true;
+        testInProgress = false;
+        document.getElementById('speed-status').textContent =
+          'Starting Monitoring...';
+
+        // Initial measurement
+        const result = await measureAPIPerformance();
+        updateSpeedometerNeedle(result.avgTime);
+
+        // Set up interval for continuous monitoring (only when no test is running)
+        monitoringInterval = setInterval(async () => {
+          if (!isMonitoring) return;
+
+          // Only do continuous monitoring if no test is in progress
+          if (!testInProgress) {
+            const result = await measureAPIPerformance();
+            updateSpeedometerNeedle(result.avgTime);
+          }
+        }, 3000); // Update every 3 seconds for continuous monitoring
+      }
+
+      function stopRealtimeMonitoring() {
+        isMonitoring = false;
+        testInProgress = false;
+
+        if (monitoringInterval) {
+          clearInterval(monitoringInterval);
+          monitoringInterval = null;
+        }
+
+        document.getElementById('speed-status').textContent =
+          'Monitoring Stopped';
+        updateSpeedometerNeedle(0);
+        currentTestResults = [];
+      }
+
+      // Function to reset test progress
+      function resetTestProgress() {
+        testInProgress = false;
+        if (isMonitoring) {
+          document.getElementById('speed-status').textContent =
+            'Continuous Monitoring';
+        }
       }
 
       // Initialize
