@@ -255,6 +255,23 @@
     </div>
 
     <script>
+      // Configure API URLs based on current host (for VPS deployment)
+      const currentHost = window.location.hostname;
+      
+      // Replace all localhost URLs with current hostname
+      document.addEventListener('DOMContentLoaded', function() {
+        // Get the original script content and replace localhost URLs
+        const scripts = document.querySelectorAll('script');
+        scripts.forEach(script => {
+          if (script.innerHTML.includes('localhost')) {
+            script.innerHTML = script.innerHTML
+              .replace(/http:\/\/localhost:3000/g, `http://${currentHost}:3000`)
+              .replace(/http:\/\/localhost:3001/g, `http://${currentHost}:3001`)
+              .replace(/http:\/\/localhost:3002/g, `http://${currentHost}:3002`);
+          }
+        });
+      });
+
       // Chart configurations
       const responseChart = new Chart(
         document.getElementById('responseComparisonChart'),
@@ -349,13 +366,13 @@
       }
 
       // Detect current environment and set API URLs
+      const currentPort = window.location.port || '80';
       const currentHost = window.location.hostname;
-      const currentPort = window.location.port;
-      
-      // Use relative URLs to call the API on the same port as the dashboard
-      const API_BASE = '';  // Same origin
-      
-      console.log(`Dashboard running on: ${currentHost}:${currentPort}`);
+      const API_URLS = {
+        basic: `http://${currentHost}:3002`,
+        optimized: `http://${currentHost}:3000`, 
+        scaled: `http://${currentHost}:3001`
+      };
 
       // Test functions
       async function testBasicAPI() {
@@ -366,9 +383,9 @@
           const numRequests = 10;
           const startTime = performance.now();
 
-          // Send 10 requests to the current API
+          // Send 10 requests to basic API (port 3002)
           const promises = Array.from({ length: numRequests }, () =>
-            fetch('/user').then((r) => r.json())
+            fetch(`${API_URLS.basic}/user`).then((r) => r.json())
           );
 
           await Promise.all(promises);
