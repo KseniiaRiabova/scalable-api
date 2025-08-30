@@ -255,24 +255,10 @@
     </div>
 
     <script>
-      // Configure API URLs based on current host (for VPS deployment)
-      const currentHost = window.location.hostname;
-
       // Replace all localhost URLs with current hostname
       document.addEventListener('DOMContentLoaded', function () {
-        // Get the original script content and replace localhost URLs
-        const scripts = document.querySelectorAll('script');
-        scripts.forEach((script) => {
-          if (script.innerHTML.includes('localhost')) {
-            script.innerHTML = script.innerHTML
-              .replace(/http:\/\/localhost:3000/g, `http://${currentHost}:3000`)
-              .replace(/http:\/\/localhost:3001/g, `http://${currentHost}:3001`)
-              .replace(
-                /http:\/\/localhost:3002/g,
-                `http://${currentHost}:3002`
-              );
-          }
-        });
+        // This dynamic replacement is no longer needed since we use window.location.hostname
+        console.log('Dashboard loaded for host:', window.location.hostname);
       });
 
       // Chart configurations
@@ -370,7 +356,9 @@
 
       // Detect current environment and set API URLs
       const currentPort = window.location.port || '80';
-      // currentHost already declared above
+      // Automatically use current hostname (works for both localhost and VPS)
+      const currentHost = window.location.hostname;
+
       const API_URLS = {
         basic: `http://${currentHost}:3002`,
         optimized: `http://${currentHost}:3000`,
@@ -1076,9 +1064,12 @@
       let testInProgress = false;
       let currentTestResults = [];
       const APIs = [
-        { url: `${API_URLS.basic}/user`, name: 'Basic' },
-        { url: `${API_URLS.optimized}/user`, name: 'Optimized' },
-        { url: `${API_URLS.scaled}/user`, name: 'Scaled' },
+        { url: `http://${window.location.hostname}:3002/user`, name: 'Basic' },
+        {
+          url: `http://${window.location.hostname}:3000/user`,
+          name: 'Optimized',
+        },
+        { url: `http://${window.location.hostname}:3001/user`, name: 'Scaled' },
       ];
 
       function updateSpeedometerNeedle(value, testName = null) {
