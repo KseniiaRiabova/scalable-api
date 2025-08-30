@@ -16,11 +16,8 @@ COPY . .
 # Build TypeScript
 RUN npm run build
 
-# Remove dev dependencies to reduce image size
-RUN npm prune --production
-
 # Expose all ports for the 3 APIs
 EXPOSE 3000 3001 3002
 
-# Start all APIs
-CMD ["npm", "run", "start-all"]
+# Start all APIs (use a simpler approach for production)
+CMD ["sh", "-c", "npm run start:basic & npm run start:redis & npm run start:cluster & wait"]
