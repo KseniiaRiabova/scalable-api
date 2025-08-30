@@ -1091,8 +1091,12 @@
         // Update status text based on context
         if (testInProgress && testName) {
           statusElement.textContent = `Testing ${testName}...`;
+          statusElement.style.color = '#ffffff';
+          statusElement.style.fontWeight = 'bold';
         } else {
-          statusElement.textContent = '';
+          statusElement.textContent = 'Shows live performance during tests';
+          statusElement.style.color = '#ffffff';
+          statusElement.style.fontWeight = 'normal';
         }
 
         // Update color based on performance
@@ -1138,12 +1142,14 @@
       // Function to reset test progress
       function resetTestProgress() {
         testInProgress = false;
-        document.getElementById('speed-status').textContent = '';
-        document.getElementById('speed-status').style.color = '#666';
+        document.getElementById('speed-status').textContent =
+          'Shows live performance during tests';
+        document.getElementById('speed-status').style.color = '#ffffff';
         document.getElementById('speed-status').style.fontWeight = 'normal';
       }
 
       // Initialize
+      resetTestProgress(); // Set default speedometer message
       updateStatus('basic', 'status-offline');
       updateStatus('optimized', 'status-offline');
       updateStatus('scaled', 'status-offline');
