@@ -440,7 +440,7 @@
 
           // Send 100 concurrent requests to basic API (port 3002)
           const promises = Array.from({ length: numRequests }, () =>
-            fetch('http://localhost:3002/user').then((r) => r.json())
+            fetch(`${API_URLS.basic}/user`).then((r) => r.json())
           );
 
           await Promise.all(promises);
@@ -489,7 +489,7 @@
 
           // Send 10 requests to optimized API (port 3000)
           const promises = Array.from({ length: numRequests }, () =>
-            fetch('http://localhost:3000/user').then((r) => r.json())
+            fetch(`${API_URLS.optimized}/user`).then((r) => r.json())
           );
 
           await Promise.all(promises);
@@ -538,7 +538,7 @@
 
           // Send 10 requests to cluster API (port 3001)
           const promises = Array.from({ length: numRequests }, () =>
-            fetch('http://localhost:3001/user').then((r) => r.json())
+            fetch(`${API_URLS.scaled}/user`).then((r) => r.json())
           );
 
           const results = await Promise.all(promises);
@@ -606,7 +606,7 @@
 
           // Send 100 concurrent requests to optimized API (port 3000)
           const promises = Array.from({ length: numRequests }, () =>
-            fetch('http://localhost:3000/user').then((r) => r.json())
+            fetch(`${API_URLS.optimized}/user`).then((r) => r.json())
           );
 
           const results = await Promise.all(promises);
@@ -651,7 +651,7 @@
 
           // Send 100 concurrent requests to cluster API (port 3001)
           const promises = Array.from({ length: numRequests }, () =>
-            fetch('http://localhost:3001/user').then((r) => r.json())
+            fetch(`${API_URLS.scaled}/user`).then((r) => r.json())
           );
 
           const results = await Promise.all(promises);
@@ -715,7 +715,7 @@
 
           // Send concurrent requests for fair comparison
           const promises = Array.from({ length: numRequests }, () =>
-            fetch('http://localhost:3002/cpu-intensive').then((r) => r.json())
+            fetch(`${API_URLS.basic}/cpu-intensive`).then((r) => r.json())
           );
 
           const results = await Promise.all(promises);
@@ -761,7 +761,7 @@
 
           // Send concurrent requests for fair comparison (no rate limits)
           const promises = Array.from({ length: numRequests }, () =>
-            fetch('http://localhost:3000/cpu-intensive').then((r) => r.json())
+            fetch(`${API_URLS.optimized}/cpu-intensive`).then((r) => r.json())
           );
 
           const results = await Promise.all(promises);
@@ -807,7 +807,7 @@
 
           // Send concurrent requests to demonstrate clustering
           const promises = Array.from({ length: numRequests }, () =>
-            fetch('http://localhost:3001/cpu-intensive').then((r) => r.json())
+            fetch(`${API_URLS.scaled}/cpu-intensive`).then((r) => r.json())
           );
 
           const results = await Promise.all(promises);
@@ -864,7 +864,7 @@
           const basicStart = performance.now();
 
           const basicPromises = Array.from({ length: numRequests }, () =>
-            fetch('http://localhost:3002/user').then((r) => r.json())
+            fetch(`${API_URLS.basic}/user`).then((r) => r.json())
           );
           await Promise.all(basicPromises);
 
@@ -880,7 +880,7 @@
           const redisStart = performance.now();
 
           const redisPromises = Array.from({ length: numRequests }, () =>
-            fetch('http://localhost:3000/user').then((r) => r.json())
+            fetch(`${API_URLS.optimized}/user`).then((r) => r.json())
           );
           await Promise.all(redisPromises);
 
@@ -896,7 +896,7 @@
           const clusterStart = performance.now();
 
           const clusterPromises = Array.from({ length: numRequests }, () =>
-            fetch('http://localhost:3001/user').then((r) => r.json())
+            fetch(`${API_URLS.scaled}/user`).then((r) => r.json())
           );
           await Promise.all(clusterPromises);
 
@@ -953,7 +953,7 @@
           updateStatus('basic', 'status-testing');
           const basicStart = performance.now();
           const basicPromises = Array.from({ length: 20 }, () =>
-            fetch('http://localhost:3002/cpu-intensive').then((r) => r.json())
+            fetch(`${API_URLS.basic}/cpu-intensive`).then((r) => r.json())
           );
           const basicResults = await Promise.all(basicPromises);
           const basicEnd = performance.now();
@@ -980,7 +980,7 @@
           updateStatus('optimized', 'status-testing');
           const redisStart = performance.now();
           const redisPromises = Array.from({ length: 20 }, () =>
-            fetch('http://localhost:3000/cpu-intensive').then((r) => r.json())
+            fetch(`${API_URLS.optimized}/cpu-intensive`).then((r) => r.json())
           );
           const redisResults = await Promise.all(redisPromises);
           const redisEnd = performance.now();
@@ -1007,7 +1007,7 @@
           updateStatus('scaled', 'status-testing');
           const clusterStart = performance.now();
           const clusterPromises = Array.from({ length: 20 }, () =>
-            fetch('http://localhost:3001/cpu-intensive').then((r) => r.json())
+            fetch(`${API_URLS.scaled}/cpu-intensive`).then((r) => r.json())
           );
           const clusterResults = await Promise.all(clusterPromises);
           const clusterEnd = performance.now();
@@ -1076,9 +1076,9 @@
       let testInProgress = false;
       let currentTestResults = [];
       const APIs = [
-        { url: 'http://localhost:3002/user', name: 'Basic' },
-        { url: 'http://localhost:3000/user', name: 'Optimized' },
-        { url: 'http://localhost:3001/user', name: 'Scaled' },
+        { url: `${API_URLS.basic}/user`, name: 'Basic' },
+        { url: `${API_URLS.optimized}/user`, name: 'Optimized' },
+        { url: `${API_URLS.scaled}/user`, name: 'Scaled' },
       ];
 
       function updateSpeedometerNeedle(value, testName = null) {
