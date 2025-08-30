@@ -1085,12 +1085,9 @@
       let testInProgress = false;
       let currentTestResults = [];
       const APIs = [
-        { url: `http://${window.location.hostname}:3002/user`, name: 'Basic' },
-        {
-          url: `http://${window.location.hostname}:3000/user`,
-          name: 'Optimized',
-        },
-        { url: `http://${window.location.hostname}:3001/user`, name: 'Scaled' },
+        { url: `${API_URLS.basic}/user`, name: 'Basic' },
+        { url: `${API_URLS.optimized}/user`, name: 'Optimized' },
+        { url: `${API_URLS.scaled}/user`, name: 'Scaled' },
       ];
 
       function updateSpeedometerNeedle(value, testName = null) {
