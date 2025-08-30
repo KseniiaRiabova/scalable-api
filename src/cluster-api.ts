@@ -58,6 +58,7 @@ if (cluster.isPrimary) {
   });
 
   const redisClient = createClient({
+    url: process.env.REDIS_URL || 'redis://localhost:6379',
     database: 2,
   });
 

@@ -28,7 +28,9 @@ app.get('/', (req: Request, res: Response) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
-const redisClient = createClient();
+const redisClient = createClient({
+  url: process.env.REDIS_URL || 'redis://localhost:6379'
+});
 redisClient.connect().catch(console.error);
 
 app.get('/cpu-intensive', async (req: Request, res: Response) => {
