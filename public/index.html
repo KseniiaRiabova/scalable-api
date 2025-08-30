@@ -11,7 +11,6 @@
     <link rel="shortcut icon" href="favicon.ico" />
 
     <link rel="stylesheet" href="comparison-dashboard.css" />
-    <script src="config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
@@ -358,8 +357,34 @@
       // Detect current environment and set API URLs
       const currentPort = window.location.port || '80';
       // Automatically use current hostname (works for both localhost and VPS)
-      // Use the API configuration from config.js
-      const API_URLS = window.API_CONFIG;
+      // Configuration for API endpoints
+      const getApiConfig = () => {
+        const currentHost = window.location.hostname;
+        const protocol = window.location.protocol;
+
+        // Check if we're running locally
+        const isLocalhost =
+          currentHost === 'localhost' || currentHost === '127.0.0.1';
+
+        if (isLocalhost) {
+          // Local development configuration
+          return {
+            basic: `${protocol}//${currentHost}:3002`,
+            optimized: `${protocol}//${currentHost}:3000`,
+            scaled: `${protocol}//${currentHost}:3001`,
+          };
+        } else {
+          // Production configuration - direct port access since no nginx yet
+          return {
+            basic: `${protocol}//${currentHost}:3002`,
+            optimized: `${protocol}//${currentHost}:3000`,
+            scaled: `${protocol}//${currentHost}:3001`,
+          };
+        }
+      };
+
+      // Use the API configuration
+      const API_URLS = getApiConfig();
 
       // Test functions
       async function testBasicAPI() {
