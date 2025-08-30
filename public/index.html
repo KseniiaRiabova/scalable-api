@@ -1127,6 +1127,11 @@
 
       // Function to update speedometer during tests
       function updateSpeedometerDuringTest(testName, avgResponseTime) {
+        // Stop monitoring during tests to avoid interference
+        if (isMonitoring) {
+          stopRealtimeMonitoring();
+        }
+
         testInProgress = true;
         updateSpeedometerNeedle(avgResponseTime, testName);
 
@@ -1201,20 +1206,20 @@
         document.getElementById('speed-status').textContent =
           'Starting Monitoring...';
 
-        // Initial measurement
+        // Add visual indicator
+        document.getElementById('speed-status').style.color = '#4caf50';
+        document.getElementById('speed-status').style.fontWeight = 'bold';
         const result = await measureAPIPerformance();
         updateSpeedometerNeedle(result.avgTime);
 
         // Set up interval for continuous monitoring (only when no test is running)
         monitoringInterval = setInterval(async () => {
-          if (!isMonitoring) return;
+          if (!isMonitoring || testInProgress) return;
 
           // Only do continuous monitoring if no test is in progress
-          if (!testInProgress) {
-            const result = await measureAPIPerformance();
-            updateSpeedometerNeedle(result.avgTime);
-          }
-        }, 3000); // Update every 3 seconds for continuous monitoring
+          const result = await measureAPIPerformance();
+          updateSpeedometerNeedle(result.avgTime);
+        }, 5000); // Increased to 5 seconds to be less intrusive
       }
 
       function stopRealtimeMonitoring() {
@@ -1228,6 +1233,8 @@
 
         document.getElementById('speed-status').textContent =
           'Monitoring Stopped';
+        document.getElementById('speed-status').style.color = '#666';
+        document.getElementById('speed-status').style.fontWeight = 'normal';
         updateSpeedometerNeedle(0);
         currentTestResults = [];
       }
@@ -1235,9 +1242,10 @@
       // Function to reset test progress
       function resetTestProgress() {
         testInProgress = false;
-        if (isMonitoring) {
+        // Don't auto-restart monitoring after tests
+        if (!isMonitoring) {
           document.getElementById('speed-status').textContent =
-            'Continuous Monitoring';
+            'Ready - Click "Start Real-time Monitoring" to begin';
         }
       }
 
