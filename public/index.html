@@ -178,20 +178,6 @@
         <div class="chart-card speedometer-card">
           <div class="chart-header">
             <div class="chart-title">Average Response Time</div>
-            <div class="chart-controls">
-              <button
-                class="chart-test-button"
-                onclick="startRealtimeMonitoring()"
-              >
-                Continue
-              </button>
-              <button
-                class="chart-test-button"
-                onclick="stopRealtimeMonitoring()"
-              >
-                Stop
-              </button>
-            </div>
             <div
               style="
                 margin-top: 10px;
@@ -1080,8 +1066,6 @@
       }
 
       // Real-time speedometer functionality
-      let monitoringInterval = null;
-      let isMonitoring = false;
       let testInProgress = false;
       let currentTestResults = [];
       const APIs = [
@@ -1107,10 +1091,8 @@
         // Update status text based on context
         if (testInProgress && testName) {
           statusElement.textContent = `Testing ${testName}...`;
-        } else if (isMonitoring && !testInProgress) {
-          statusElement.textContent = 'Continuous Monitoring';
         } else {
-          statusElement.textContent = 'Monitoring Stopped';
+          statusElement.textContent = '';
         }
 
         // Update color based on performance
@@ -1127,11 +1109,6 @@
 
       // Function to update speedometer during tests
       function updateSpeedometerDuringTest(testName, avgResponseTime) {
-        // Stop monitoring during tests to avoid interference
-        if (isMonitoring) {
-          stopRealtimeMonitoring();
-        }
-
         testInProgress = true;
         updateSpeedometerNeedle(avgResponseTime, testName);
 
@@ -1158,95 +1135,12 @@
         return sum / currentTestResults.length;
       }
 
-      async function measureAPIPerformance() {
-        const results = [];
-
-        for (const api of APIs) {
-          try {
-            const startTime = performance.now();
-            const response = await fetch(api.url);
-
-            if (response.ok) {
-              const endTime = performance.now();
-              results.push({
-                name: api.name,
-                time: endTime - startTime,
-                success: true,
-              });
-            }
-          } catch (error) {
-            results.push({
-              name: api.name,
-              time: 0,
-              success: false,
-            });
-          }
-        }
-
-        // Calculate average of successful requests
-        const successfulResults = results.filter((r) => r.success);
-        if (successfulResults.length > 0) {
-          const avgTime =
-            successfulResults.reduce((sum, r) => sum + r.time, 0) /
-            successfulResults.length;
-          return {
-            avgTime,
-            details: results,
-          };
-        }
-
-        return { avgTime: 0, details: results };
-      }
-
-      async function startRealtimeMonitoring() {
-        if (isMonitoring) return;
-
-        isMonitoring = true;
-        testInProgress = false;
-        document.getElementById('speed-status').textContent =
-          'Starting Monitoring...';
-
-        // Add visual indicator
-        document.getElementById('speed-status').style.color = '#4caf50';
-        document.getElementById('speed-status').style.fontWeight = 'bold';
-        const result = await measureAPIPerformance();
-        updateSpeedometerNeedle(result.avgTime);
-
-        // Set up interval for continuous monitoring (only when no test is running)
-        monitoringInterval = setInterval(async () => {
-          if (!isMonitoring || testInProgress) return;
-
-          // Only do continuous monitoring if no test is in progress
-          const result = await measureAPIPerformance();
-          updateSpeedometerNeedle(result.avgTime);
-        }, 5000); // Increased to 5 seconds to be less intrusive
-      }
-
-      function stopRealtimeMonitoring() {
-        isMonitoring = false;
-        testInProgress = false;
-
-        if (monitoringInterval) {
-          clearInterval(monitoringInterval);
-          monitoringInterval = null;
-        }
-
-        document.getElementById('speed-status').textContent =
-          'Monitoring Stopped';
-        document.getElementById('speed-status').style.color = '#666';
-        document.getElementById('speed-status').style.fontWeight = 'normal';
-        updateSpeedometerNeedle(0);
-        currentTestResults = [];
-      }
-
       // Function to reset test progress
       function resetTestProgress() {
         testInProgress = false;
-        // Don't auto-restart monitoring after tests
-        if (!isMonitoring) {
-          document.getElementById('speed-status').textContent =
-            'Ready - Click "Start Real-time Monitoring" to begin';
-        }
+        document.getElementById('speed-status').textContent = '';
+        document.getElementById('speed-status').style.color = '#666';
+        document.getElementById('speed-status').style.fontWeight = 'normal';
       }
 
       // Initialize
