@@ -11,6 +11,7 @@
     <link rel="shortcut icon" href="favicon.ico" />
 
     <link rel="stylesheet" href="comparison-dashboard.css" />
+    <script src="config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
@@ -357,13 +358,8 @@
       // Detect current environment and set API URLs
       const currentPort = window.location.port || '80';
       // Automatically use current hostname (works for both localhost and VPS)
-      const currentHost = window.location.hostname;
-
-      const API_URLS = {
-        basic: `http://${currentHost}:3002`,
-        optimized: `http://${currentHost}:3000`,
-        scaled: `http://${currentHost}:3001`,
-      };
+      // Use the API configuration from config.js
+      const API_URLS = window.API_CONFIG;
 
       // Test functions
       async function testBasicAPI() {
