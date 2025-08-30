@@ -358,6 +358,7 @@
       const currentPort = window.location.port || '80';
       // Automatically use current hostname (works for both localhost and VPS)
       // Configuration for API endpoints
+      // Configuration for API endpoints
       const getApiConfig = () => {
         const currentHost = window.location.hostname;
         const protocol = window.location.protocol;
@@ -374,15 +375,14 @@
             scaled: `${protocol}//${currentHost}:3001`,
           };
         } else {
-          // Production configuration - direct port access since no nginx yet
+          // Production configuration using nginx proxy
           return {
-            basic: `${protocol}//${currentHost}:3002`,
-            optimized: `${protocol}//${currentHost}:3000`,
-            scaled: `${protocol}//${currentHost}:3001`,
+            basic: `${protocol}//${currentHost}/scalable-api/basic`,
+            optimized: `${protocol}//${currentHost}/scalable-api/redis`,
+            scaled: `${protocol}//${currentHost}/scalable-api/cluster`,
           };
         }
       };
-
       // Use the API configuration
       const API_URLS = getApiConfig();
 
