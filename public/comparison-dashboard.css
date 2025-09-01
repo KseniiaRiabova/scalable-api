@@ -92,6 +92,10 @@
   justify-content: center;
   width: 40px;
   height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  max-width: 40px;
+  max-height: 40px;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.1);
   color: var(--text-white);
@@ -99,6 +103,7 @@
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
 .social-link:hover,
@@ -109,8 +114,31 @@
 
 .social-icon,
 .info-icon {
-  width: 20px;
-  height: 20px;
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px;
+  min-height: 20px;
+  max-width: 20px;
+  max-height: 20px;
+  flex-shrink: 0;
+  display: block;
+}
+
+/* Additional SVG constraints */
+.social-link svg,
+.info-button svg {
+  width: 20px !important;
+  height: 20px !important;
+  max-width: 20px !important;
+  max-height: 20px !important;
+  flex-shrink: 0 !important;
+}
+
+.header-right svg {
+  width: 20px !important;
+  height: 20px !important;
+  max-width: 20px !important;
+  max-height: 20px !important;
 }
 
 /* Adjust container to account for fixed header */
@@ -271,14 +299,22 @@ h1 {
 
   .social-link,
   .info-button {
-    width: 35px;
-    height: 35px;
+    width: 35px !important;
+    height: 35px !important;
+    min-width: 35px;
+    min-height: 35px;
+    max-width: 35px;
+    max-height: 35px;
   }
 
   .social-icon,
   .info-icon {
-    width: 18px;
-    height: 18px;
+    width: 18px !important;
+    height: 18px !important;
+    min-width: 18px;
+    min-height: 18px;
+    max-width: 18px;
+    max-height: 18px;
   }
 
   .container {
