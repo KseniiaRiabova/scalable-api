@@ -4,7 +4,6 @@ A progressive demonstration of API optimization techniques, showcasing the evolu
 
 🌐 **[Live Demo](https://kseniiariabova.com/scalable-api/)** - Experience the performance comparison dashboardcalable API Performance Demonstration
 
-A progressive demonstration of API optimization techniques, showcasing the evolution from basic single-process APIs to high-performance clustered architectures with Redis caching.
 
 ## 🎯 Problem Statement
 
