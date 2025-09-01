@@ -1,4 +1,8 @@
-# 🚀 Scalable API Performance Demonstration
+# Scalable API Performance Demonstration
+
+A progressive demonstration of API optimization techniques, showcasing the evolution from basic single-process APIs to high-performance clustered architectures with Redis caching.
+
+🌐 **[Live Demo](https://kseniiariabova.com/scalable-api/)** - Experience the performance comparison dashboardcalable API Performance Demonstration
 
 A progressive demonstration of API optimization techniques, showcasing the evolution from basic single-process APIs to high-performance clustered architectures with Redis caching.
 
@@ -53,14 +57,26 @@ if (cached) {
 ### 3. **Cluster API** - Parallel Processing
 
 ```typescript
-// CPU-intensive workload distributed across workers
-app.get('/cpu-intensive', async (req, res) => {
-  let result = 0;
-  for (let i = 0; i < 5000000; i++) {
-    result += Math.sqrt(i) * Math.sin(i) * Math.cos(i);
+// Multi-process cluster setup
+if (cluster.isPrimary) {
+  console.log(`Primary ${process.pid} is running`);
+  console.log(`Starting ${numCPUs} workers...`);
+
+  // Fork workers for each CPU core
+  for (let i = 0; i < numCPUs; i++) {
+    cluster.fork();
   }
-  // ... matrix operations
-});
+
+  // Auto-restart failed workers
+  cluster.on('exit', (worker, code, signal) => {
+    console.log(`Worker ${worker.process.pid} died`);
+    cluster.fork();
+  });
+} else {
+  // Worker process handles requests
+  const app = express();
+  // ... Express setup and routes
+}
 ```
 
 - **Port**: 3001
@@ -291,3 +307,5 @@ This workload demonstrates:
 **Built with ❤️ to demonstrate practical API optimization techniques**
 
 Educational project demonstrating API optimization techniques and scalability patterns.
+
+**Connect with the author**: [Kseniia on LinkedIn](https://www.linkedin.com/in/riabovakseniia/)
